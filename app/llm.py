@@ -17,7 +17,7 @@ from .mock_llm import FakeLLM, FakeResponse, FakeUsage
 
 DEFAULT_MODEL = "claude-opus-5"
 DEFAULT_EFFORT = "medium"
-DEFAULT_MAX_TOKENS = 1024
+DEFAULT_MAX_TOKENS = 2048
 DEFAULT_AIBOX_BASE_URL = "https://api.ai-box.vn/v1"
 
 
@@ -88,8 +88,21 @@ class AiboxLLM:
         if not response.choices:
             raise RuntimeError("AI Box response contained no choices")
 
+        choice = response.choices[0]
+        text = choice.message.content or ""
+        if not text.strip():
+            # Reasoning models (deepseek-v4-*) spend max_tokens on reasoning_content
+            # first; a tight budget leaves content empty. Fail loudly instead of
+            # logging an empty answer that looks like a successful request.
+            finish_reason = getattr(choice, "finish_reason", None)
+            raise RuntimeError(
+                "AI Box returned an empty message "
+                f"(finish_reason={finish_reason!r}, max_tokens={self._max_tokens}). "
+                "Raise LLM_MAX_TOKENS if the model spends its budget on reasoning."
+            )
+
         return FakeResponse(
-            text=response.choices[0].message.content or "",
+            text=text,
             usage=FakeUsage(
                 input_tokens=response.usage.prompt_tokens,
                 output_tokens=response.usage.completion_tokens,

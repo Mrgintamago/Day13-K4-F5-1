@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
+import pytest
+
 from app import llm as llm_module
 from app.mock_llm import FakeLLM
 
@@ -144,3 +146,42 @@ def test_aibox_client_maps_sdk_response(monkeypatch) -> None:
     assert response.usage.input_tokens == 23
     assert response.usage.output_tokens == 11
     assert response.model == "aibox-resolved-model"
+
+
+def test_aibox_raises_when_reasoning_model_returns_empty_content(monkeypatch) -> None:
+    # deepseek-v4-* spend max_tokens on reasoning_content first: a tight budget
+    # comes back with finish_reason="length" and an empty content field.
+    sdk_response = SimpleNamespace(
+        choices=[
+            SimpleNamespace(
+                finish_reason="length",
+                message=SimpleNamespace(content="", reasoning_content="thinking..."),
+            )
+        ],
+        usage=SimpleNamespace(prompt_tokens=25, completion_tokens=201),
+        model="deepseek-v4-pro",
+    )
+
+    class FakeCompletions:
+        def create(self, **kwargs):
+            return sdk_response
+
+    class FakeChat:
+        def __init__(self) -> None:
+            self.completions = FakeCompletions()
+
+    class FakeOpenAIClient:
+        def __init__(self, *, base_url: str, api_key: str) -> None:
+            self.chat = FakeChat()
+
+    monkeypatch.setattr(llm_module, "OpenAI", FakeOpenAIClient)
+    monkeypatch.setenv("LLM_PROVIDER", "aibox")
+    monkeypatch.setenv("LLM_MODEL", "deepseek-v4-pro")
+    monkeypatch.setenv("AIBOX_API_KEY", "aibox-test-api-key")
+    monkeypatch.delenv("AIBOX_BASE_URL", raising=False)
+    monkeypatch.setenv("LLM_MAX_TOKENS", "200")
+
+    llm = llm_module.build_llm()
+
+    with pytest.raises(RuntimeError, match="empty message"):
+        llm.generate("Test AI Box prompt")
