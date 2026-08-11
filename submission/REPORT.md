@@ -74,6 +74,15 @@ Chi tiết baseline → hiện tại:
 ## 4. Prompt versioning
 
 - Prompt name: `day13-chat`
+<<<<<<< HEAD
+- Version/label baseline: version 1 / `baseline` / `prompt_source=langfuse`
+- Version/label candidate: version 2 / `candidate` / `prompt_source=langfuse`
+  - Baseline trace ID: 782b66eb07556950c78b79b01fd6619c
+  - Candidate trace ID: a1f393cdc263280cdad1f2ecc17daed3
+- Rollback evidence: `submission/evidence/04-prompt-rollback-v1-production.png`, `submission/evidence/04-prompt-rollback-v2-production.png`
+- Trace ID của mỗi version:
+- Bằng chứng đổi label hoặc rollback:
+=======
 - Version/label baseline: **v1**, labels `baseline` + `production`
 - Version/label candidate: **v2**, label `candidate`
 - Trace ID của mỗi version — chạy **cùng một input** (`"So sanh hai prompt version"`,
@@ -98,6 +107,7 @@ gọi Langfuse API kiểm từng label (`production` → `NotFound`) rồi bắn
 metadata trace. Khắc phục bằng cách gán lại label `production` cho v1 trên Langfuse — **không sửa
 code để ghi version giả** (RULES.md). Đây đúng là bài học của mục "fallback phải trung thực":
 một hệ observability nói dối về trạng thái của chính nó còn tệ hơn không có gì.
+>>>>>>> 9b4c6e0007e45f3774f01d38682b2b6428fb53c7
 
 ## 5. Dashboard, SLO và alerts
 
