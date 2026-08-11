@@ -9,9 +9,9 @@
 
 ## 2. Kết quả kỹ thuật
 
-- Điểm `validate_logs.py`:
-- Tổng số traces:
-- Số PII leak còn lại:
+- Điểm `validate_logs.py`: baseline 30/100
+- Tổng số traces: baseline 10
+- Số PII leak còn lại: baseline 0
 - Link/đường dẫn dashboard:
 
 ## 3. Logging và tracing
