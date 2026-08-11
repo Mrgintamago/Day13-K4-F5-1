@@ -88,8 +88,8 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-24 | ≥10 traces + waterfall | QUANG | 15m | High | 14, 03 | 50 | DONE |
 | OBS-31 | `validate_dashboard.py` 6/6 | HAN | 5m | High | 01 | 30 | DONE |
 | **OBS-30** | Dựng 6 panel từ `logs.jsonl` | HAN | 45m | Blocker | 14, 31 | 32, 34, 40, 41 | REVIEW |
-| OBS-32 | Điền `slo.yaml` | HAN | 15m | Medium | 30 | 33 | TODO |
-| OBS-33 | 3 alert rule + runbook | HAN | 30m | High | 32 | 50 | TODO |
+| OBS-32 | Điền `slo.yaml` | HAN | 15m | Medium | 30 | 33 | DONE |
+| OBS-33 | 3 alert rule + runbook | HAN | 30m | High | 32 | 50 | DONE |
 | OBS-34 | Runtime check `rag_slow` | HAN | 20m | Medium | 30 | 41 | TODO |
 | **OBS-40** | Chạy incident + input challenge | QUANG | 10m | Blocker | 14, 30 | 41, 42, 43 | DONE |
 | OBS-41 | Triệu chứng từ Metrics | HAN | 15m | High | 40, 34 | 44 | TODO |
