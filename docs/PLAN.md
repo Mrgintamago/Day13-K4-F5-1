@@ -85,7 +85,7 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-21 | Prompt v2 (`candidate`) | SANG | 10m | High | 20 | 22 | TODO |
 | OBS-22 | Chạy 2 label, thu 2 trace ID | SANG | 15m | High | 21, 10 | 23, 51 | TODO |
 | OBS-23 | Promote → rollback `production` | SANG | 15m | High | 22 | 50 | TODO |
-| OBS-24 | ≥10 traces + waterfall | QUANG | 15m | High | 14, 03 | 50 | TODO |
+| OBS-24 | ≥10 traces + waterfall | QUANG | 15m | High | 14, 03 | 50 | WIP |
 | OBS-31 | `validate_dashboard.py` 6/6 | HAN | 5m | High | 01 | 30 | TODO |
 | **OBS-30** | Dựng 6 panel từ `logs.jsonl` | HAN | 45m | Blocker | 14, 31 | 32, 34, 40, 41 | TODO |
 | OBS-32 | Điền `slo.yaml` | HAN | 15m | Medium | 30 | 33 | TODO |
