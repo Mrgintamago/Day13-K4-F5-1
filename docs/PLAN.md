@@ -98,9 +98,9 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | **OBS-44** | Root cause + fix + preventive | QUANG | 20m | Blocker | 41, 42, 43 | 45, 52 | DONE |
 | OBS-45 | Tắt incident | QUANG | 5m | Medium | 44 | — | DONE |
 | OBS-50 | Gom evidence | TUONG | 20m | Blocker | 14, 23, 24, 33, 34 | 51 | DONE |
-| OBS-51 | REPORT mục 1–5 | TUONG | 20m | Blocker | 50, 22 | 53, 54 | WIP |
-| **OBS-52** | REPORT mục 6 (challenge) | TUONG | 15m | Blocker | 44 | 54 | TODO |
-| OBS-53 | REPORT mục 7 (đóng góp) | TUONG | 10m | High | 51 | 54 | WIP |
+| OBS-51 | REPORT mục 1–5 | TUONG | 20m | Blocker | 50, 22 | 53, 54 | DONE |
+| **OBS-52** | REPORT mục 6 (challenge) | TUONG | 15m | Blocker | 44 | 54 | DONE |
+| OBS-53 | REPORT mục 7 (đóng góp) | TUONG | 10m | High | 51 | 54 | DONE |
 | **OBS-54** | Cổng chất lượng trước nộp | QUANG | 15m | Blocker | 51, 52, 53 | — | TODO |
 
 **In đậm = nằm trên đường găng.**
@@ -155,7 +155,7 @@ Trạng thái còn lại:
 - `.venv` đã dựng bằng **Python 3.11.9**, `pip install -r requirements.txt` xanh, `pytest -q`
   báo **33 passed** trên 11 file test. `.env` đã có đủ các biến Langfuse bắt buộc (không commit),
   `data/logs.jsonl` đã được sinh.
-- Board hiện có **16 ticket `DONE`**, **2 ticket `WIP`** (`OBS-51`, `OBS-53`) và **1 ticket `TODO`**
+- Board hiện có **18 ticket `DONE`**, **0 ticket `WIP`** và **1 ticket `TODO`**
   (`OBS-41`); chưa có ticket ở `REVIEW`.
 - Không còn dòng `TODO` trong `app/`: PII processor đã được đăng ký đúng trước
   `JsonlFileProcessor` (`OBS-12`) và hai pattern passport/địa chỉ đã được bổ sung (`OBS-13`).
@@ -407,23 +407,29 @@ Không tự tạo hay sửa `config/challenge.json` trong bất kỳ trường h
   tên file vào `SPEC.md §9`.
 
 ### OBS-51 · Điền REPORT mục 1–5
-- **Assignee:** TUONG · **Est:** 20m · **Priority:** Blocker
+- **Assignee:** TUONG · **Est:** 20m · **Priority:** Blocker · **Trạng thái:** DONE
 - **Blocked by:** `OBS-50`, `OBS-22`
 - **Blocks:** `OBS-54`
 - **DoD:** mọi ảnh được dẫn bằng đường dẫn tương đối; không còn dòng trống.
 
 ### OBS-52 · Điền REPORT mục 6 (challenge)
-- **Assignee:** TUONG · **Est:** 15m · **Priority:** Blocker
+- **Assignee:** TUONG · **Est:** 15m · **Priority:** Blocker · **Trạng thái:** DONE
 - **Blocked by:** `OBS-44`
 - **Blocks:** `OBS-54`
 - **DoD:** có `Challenge ID`, triệu chứng, trace ID, correlation ID, root cause, fix, preventive.
+- **Ghi chú hoàn thành:** nội dung đã được điền sẵn từ `OBS-40`; rà soát lại đủ 7/7 yếu tố DoD
+  (Challenge ID `day13-k4-observability-v1`, triệu chứng P95 2652ms, trace `f1d677bd…`,
+  correlation `req-719b7dfe`, root cause retrieval, fix `--disable`, preventive 3 việc).
 
 ### OBS-53 · Điền REPORT mục 7 (bảng đóng góp)
-- **Assignee:** TUONG · **Est:** 10m · **Priority:** High
+- **Assignee:** TUONG · **Est:** 10m · **Priority:** High · **Trạng thái:** DONE
 - **Blocked by:** `OBS-51`
 - **Blocks:** `OBS-54`
 - **Việc:** mỗi thành viên 1 dòng: phần việc + link commit `OBS-xx` + điều đã học. Đây là 20 điểm B2.
 - **DoD:** khai báo khớp `git log --author`.
+- **Ghi chú hoàn thành:** đã điền đủ 4 dòng, khớp `git log --author` (Quang `xuan quang`, Sáng
+  `QNSang`, Tường `tuon10282`, Hân `Luu Nguyen Ngoc Han`/`lnnhan`); từng mô tả đối chiếu với commit
+  thật trước khi ghi.
 
 ### OBS-54 · Cổng chất lượng trước khi nộp
 - **Assignee:** QUANG · **Est:** 15m · **Priority:** Blocker
