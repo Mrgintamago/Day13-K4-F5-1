@@ -140,21 +140,25 @@ khi app tự ghi `latency_ms = 2652 ms`. Chênh lệch không phải do đo sai 
 song song (5 × 2,65s ≈ 13,3s). `latency_ms` là thời gian app xử lý một request; con số client
 thấy còn cộng thêm thời gian chờ hàng đợi. Người dùng cuối chịu con số 13,3s.
 
-**Trace ID liên quan:** `43b7912c0a78c0ace57c3e636cbe3a81` (session `k4-challenge-s01`,
-tags `lab, monitoring, deepseek-v4-pro`). Phân rã span:
+**Trace ID liên quan:** `f1d677bd232273316b3cab208f20b2bd` (session `k4-challenge-s01`,
+user `f00ba60b3772`, lúc 16:43:17, cost $0.002781, tags `lab, monitoring, deepseek-v4-pro`) —
+ảnh `submission/evidence/09-challenge-trace.png`. Phân rã span:
 
 | Observation | Type | Thời lượng | Tỷ trọng |
 |---|---|---:|---:|
-| `run` | GENERATION | 3.8 s | 100% |
-| **`rag_retrieve`** | SPAN | **2.50 s** | **66%** |
-| `llm_generate` | SPAN | 151 ms | 4% |
+| `run` | GENERATION | 2652 ms | 100% |
+| **`rag_retrieve`** | SPAN | **2501 ms** | **94%** |
+| `llm_generate` | SPAN | 151 ms | 6% |
 
 **Log line / correlation ID liên quan:** `req-719b7dfe` (session `k4-challenge-s01`,
 `user_id_hash` `f00ba60b3772`) — trích nguyên văn trong
 `submission/evidence/10-challenge-logs.txt`, gồm cặp `request_received` / `response_sent` với
 `latency_ms: 2652`, `tokens_in: 57`, `tokens_out: 174`, `cost_usd: 0.002781`, `quality_score: 0.8`.
-Ba lớp khớp nhau: metric (p95 2652ms) → trace (`rag_retrieve` 2.50s) → log (đúng correlation ID
-của request đó).
+
+Ba lớp chỉ về **cùng một request duy nhất**, không phải ba mẫu rời ghép lại: metric p95 2652 ms
+= `latency_ms` trong log = thời lượng span `run` trong trace; `session_id` `k4-challenge-s01`,
+`user_id_hash` `f00ba60b3772` và `cost_usd 0.002781` trùng khớp giữa log và trace. Đây là điều
+kiện để kết luận được tính, theo `RULES.md`.
 
 **Root cause:** tầng **retrieval** chặn ~2,5 giây trước khi trả tài liệu. Trong lab, `rag_slow`
 làm `mock_rag.retrieve()` gọi `time.sleep(2.5)` trước khi trả về (`app/mock_rag.py:17`).
