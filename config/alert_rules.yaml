@@ -1,19 +1,19 @@
 alerts:
-  - name: TODO_alert_1
-    severity: TODO
-    condition: TODO
+  - name: High Latency - API responses taking too long
+    severity: warning
+    condition: "P95 latency > 3000ms for 5 consecutive minutes"
     type: symptom-based
-    owner: TODO
+    owner: Platform Team
     runbook: docs/alerts.md#alert-1
-  - name: TODO_alert_2
-    severity: TODO
-    condition: TODO
+  - name: High Error Rate - Requests failing
+    severity: critical
+    condition: "Error rate > 2% for 5 consecutive minutes"
     type: symptom-based
-    owner: TODO
+    owner: Platform Team
     runbook: docs/alerts.md#alert-2
-  - name: TODO_alert_3
-    severity: TODO
-    condition: TODO
+  - name: Low Quality Score - Answers below threshold
+    severity: warning
+    condition: "Mean quality score < 0.75 for 10 consecutive minutes"
     type: symptom-based
-    owner: TODO
+    owner: AI Team
     runbook: docs/alerts.md#alert-3
