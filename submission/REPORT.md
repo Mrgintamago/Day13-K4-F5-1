@@ -6,7 +6,7 @@
 
 - Tên nhóm: K4-F5-1
 - Repository URL: https://github.com/Mrgintamago/Day13-K4-F5-1
-- Commit SHA cuối: _(chờ OBS-54 — chốt SHA ngay trước khi nộp)_
+- Commit SHA cuối: `137bec17bf59eb3278a76b5c016ab9cedd2a2e35` _(OBS-54 cập nhật SHA cuối cùng sau khi push)_
 - Thành viên và vai trò:
 
 | Thành viên | MSSV | Vai trò |
@@ -23,7 +23,8 @@
 - Tổng số traces: **77** trên Langfuse tại thời điểm ghi (yêu cầu tối thiểu 10), sinh bằng nhiều
   lượt `python scripts/load_test.py --concurrency 5`. Con số này còn tăng khi chạy challenge.
 - Số PII leak còn lại: **0** — `Potential PII leaks detected: 0`
-- Link/đường dẫn dashboard: _(chờ OBS-30)_
+- Link/đường dẫn dashboard: chạy `streamlit run scripts/dashboard.py` (Streamlit + Plotly, nguồn `data/logs.jsonl`)
+  → mở `http://localhost:8501`; evidence `submission/evidence/06-dashboard.png` (chi tiết mục 5).
 
 Chi tiết baseline → hiện tại:
 
@@ -107,11 +108,34 @@ một hệ observability nói dối về trạng thái của chính nó còn t�
 
 ## 5. Dashboard, SLO và alerts
 
-- Kết quả `validate_dashboard.py`: **`HỢP LỆ: 6/6 panel có trong dashboard contract.`**
-  _(evidence `05-validate-dashboard.txt` chờ OBS-31)_
-- Evidence dashboard: _(chờ OBS-30)_
-- SLO đã chọn và lý do: _(chờ OBS-32)_
-- Alert rules và runbook: _(chờ OBS-33)_
+- Kết quả `validate_dashboard.py`: **`HỢP LỆ: 6/6 panel có trong dashboard contract.`** —
+  evidence `submission/evidence/05-validate-dashboard.txt`.
+- Evidence dashboard: `submission/evidence/06-dashboard.png` (toàn cảnh 6 panel) kèm
+  `06a/06b/06c-dashboard.png` (cận cảnh từng nhóm) và `submission/evidence/07-dashboard-rag-slow.png`
+  (before/after khi bật `rag_slow`, OBS-34). Dashboard dựng bằng Streamlit (`scripts/dashboard.py`)
+  đọc trực tiếp `data/logs.jsonl`, đủ 6 nhóm: latency, traffic, errors, cost, tokens, quality.
+- SLO đã chọn và lý do (`config/slo.yaml`):
+
+  | SLI | Objective | Target | Lý do chọn |
+  |---|---|---|---|
+  | `latency_p95_ms` | 3000 ms | 99.5% | API hướng người dùng: nếu P95 quá 3s người dùng bỏ cuộc |
+  | `error_rate_pct` | 2% | 99.0% | Chat API chỉ lỗi khi hệ thống hoặc LLM gặp sự cố |
+  | `daily_cost_usd` | $2.5/ngày | 100% | Kiểm soát chi phí token, không phát sinh vượt mức |
+  | `quality_score_avg` | 0.75 | 95% | Proxy chất lượng từ mock LLM, đảm bảo câu trả lời hữu ích |
+- Alert rules và runbook (`config/alert_rules.yaml` + `docs/alerts.md#alert-1..3`): 3 rules đều
+  dựa trên triệu chứng người dùng, kèm severity, duration và runbook 3 bước Metrics → Traces → Logs:
+
+  | Alert | Severity | Condition (kèm duration) |
+  |---|---|---|
+  | High Latency - API responses taking too long | warning | P95 > **2000ms** trong 5 phút liên tục |
+  | High Error Rate - Requests failing | critical | Error rate > 2% trong 5 phút liên tục |
+  | Low Quality Score - Answers below threshold | warning | Mean quality < 0.75 trong 10 phút liên tục |
+
+  Điểm đáng chú ý: ngưỡng alert latency ban đầu là 3000ms (bằng SLO), nhưng sự cố `rag_slow` chỉ
+  đẩy P95 lên **2652ms** — với ngưỡng cũ alert sẽ **không nổ** trong chính sự cố cần bắt. Nhóm đã
+  hạ xuống **2000ms** (bám `latency_threshold_ms` của challenge), giữ nguyên duration 5 phút để
+  tránh báo động giả; SLO vẫn giữ 3000ms để alert nổ *trước* khi error budget bị phá (chi tiết ở
+  `docs/alerts.md#alert-1`, OBS-44).
 
 ## 6. Điều tra challenge
 
