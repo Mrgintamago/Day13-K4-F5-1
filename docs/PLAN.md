@@ -96,13 +96,12 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-42 | Span bất thường từ Traces | SANG | 20m | High | 40 | 44 | DONE |
 | OBS-43 | Chứng minh bằng Logs | SANG | 20m | High | 40, 10 | 44 | DONE |
 | **OBS-44** | Root cause + fix + preventive | QUANG | 20m | Blocker | 41, 42, 43 | 45, 52 | DONE |
-| OBS-45 | Tắt incident | QUANG | 5m | Medium | 44 | 55 | DONE |
+| OBS-45 | Tắt incident | QUANG | 5m | Medium | 44 | — | DONE |
 | OBS-50 | Gom evidence | TUONG | 20m | Blocker | 14, 23, 24, 33, 34 | 51 | WIP |
 | OBS-51 | REPORT mục 1–5 | TUONG | 20m | Blocker | 50, 22 | 53, 54 | WIP |
 | **OBS-52** | REPORT mục 6 (challenge) | TUONG | 15m | Blocker | 44 | 54 | TODO |
 | OBS-53 | REPORT mục 7 (đóng góp) | TUONG | 10m | High | 51 | 54 | WIP |
-| **OBS-54** | Cổng chất lượng trước nộp | QUANG | 15m | Blocker | 51, 52, 53 | 55 | TODO |
-| **OBS-55** | Kịch bản demo | TUONG + all | 15m | High | 54, 45 | — | TODO |
+| **OBS-54** | Cổng chất lượng trước nộp | QUANG | 15m | Blocker | 51, 52, 53 | — | TODO |
 
 **In đậm = nằm trên đường găng.**
 
@@ -115,7 +114,7 @@ Việc nặng chia đều QUANG và SANG (chênh 10 phút), HAN và TUONG nhẹ 
 | QUANG | 9 | 130m | 01, 10, 11, 14, 24, 40, 44, 45, 54 | 01, 10, 11, 14, 40, 44, 54 |
 | SANG | 8 | 120m | 03, 12, 20, 21, 22, 23, 42, 43 | 03, 12, 20, 21, 22, 43 |
 | HAN | 6 | 130m | 30, 31, 32, 33, 34, 41 | 30, 31, 32, 41 |
-| TUONG | 7 | 110m | 02, 13, 50, 51, 52, 53, 55 | 13, 50, 51, 52, 53 |
+| TUONG | 6 | 95m | 02, 13, 50, 51, 52, 53 | 13, 50, 51, 52, 53 |
 
 HAN est 130m nhưng chỉ 1 ticket trên đường găng (`OBS-30`) và không phải review code người khác;
 QUANG còn gánh thêm việc review + merge toàn bộ PR (`OBS-54`) nên tải thực tế nặng hơn con số est.
@@ -393,7 +392,7 @@ Không tự tạo hay sửa `config/challenge.json` trong bất kỳ trường h
 ### OBS-45 · Tắt incident, trả hệ thống về trạng thái sạch
 - **Assignee:** QUANG · **Est:** 5m · **Priority:** Medium
 - **Blocked by:** `OBS-44`
-- **Blocks:** `OBS-55`
+- **Blocks:** —
 - **DoD:** `/health` báo không còn incident bật.
 
 ---
@@ -428,14 +427,13 @@ Không tự tạo hay sửa `config/challenge.json` trong bất kỳ trường h
 ### OBS-54 · Cổng chất lượng trước khi nộp
 - **Assignee:** QUANG · **Est:** 15m · **Priority:** Blocker
 - **Blocked by:** `OBS-51`, `OBS-52`, `OBS-53`
-- **Blocks:** `OBS-55`
+- **Blocks:** —
 - **Việc:** `python -m pytest -q` · `python scripts/validate_logs.py` · `python scripts/validate_dashboard.py` · `git status --short` · rà `.env`, key, PII, `.venv/`.
 - **DoD:** test xanh; `git status` sạch; không có secret/PII trong diff; push và lấy commit SHA cuối ghi vào REPORT mục 1.
 
-### OBS-55 · Chuẩn bị demo Metrics → Traces → Logs → Root cause
-- **Assignee:** TUONG dẫn · cả nhóm · **Est:** 15m · **Priority:** High
-- **Blocked by:** `OBS-54`, `OBS-45`
-- **DoD:** kịch bản 5 phút; mỗi thành viên trả lời được câu hỏi phần mình (xem [mock-debug-qa.md](mock-debug-qa.md)).
+> **OBS-55 (kịch bản demo) đã bỏ khỏi board.** Phần vấn đáp vẫn được chấm (rubric B1, 20 điểm)
+> nhưng không quản lý như một ticket — mỗi người tự đọc [THEORY.md](THEORY.md) và
+> [mock-debug-qa.md](mock-debug-qa.md) để trả lời được phần mình làm.
 
 ---
 
@@ -496,7 +494,6 @@ flowchart TD
         T52["OBS-52<br/>REPORT 6"]
         T53["OBS-53<br/>REPORT 7"]
         T54["OBS-54<br/>quality gate"]
-        T55["OBS-55<br/>demo"]
     end
 
     T01 --> T02 & T03 & T31
@@ -516,17 +513,16 @@ flowchart TD
     T41 & T42 & T43 --> T44 --> T45 & T52
     T02 & T23 & T24 & T33 & T34 --> T50 --> T51
     T22 --> T51 --> T53
-    T51 & T52 & T53 --> T54 --> T55
-    T45 --> T55
+    T51 & T52 & T53 --> T54
 
     class T01,T10,T11,T14,T24,T40,T44,T45,T54 quang
     class T03,T12,T20,T21,T22,T23,T42,T43 sang
     class T30,T31,T32,T33,T34,T41 han
-    class T02,T13,T50,T51,T52,T53,T55 tuong
-    class T01,T02,T10,T11,T14,T30,T40,T44,T52,T54,T55 crit
+    class T02,T13,T50,T51,T52,T53 tuong
+    class T01,T02,T10,T11,T14,T30,T40,T44,T52,T54 crit
 ```
 
-**Đường găng:** `OBS-01 → OBS-02 → OBS-10 → OBS-11 → OBS-14 → OBS-30 → OBS-40 → OBS-44 → OBS-52 → OBS-54 → OBS-55`.
+**Đường găng:** `OBS-01 → OBS-02 → OBS-10 → OBS-11 → OBS-14 → OBS-30 → OBS-40 → OBS-44 → OBS-52 → OBS-54`.
 Chậm bất kỳ ticket nào trên đường này là chậm cả nhóm.
 
 ## Quy trình Git
@@ -570,7 +566,7 @@ Rủi ro: conflict khi 2 người sửa cùng file và khó tách công.
 | 0:30–1:30 | OBS-10, 11 → **OBS-14** | OBS-12 → OBS-20, 21 | đọc `dashboard.yaml`, dựng khung chart | OBS-13 |
 | 1:30–2:30 | OBS-24, review + merge PR | OBS-22, 23 | OBS-30, 32, 33, 34 | OBS-50 (gom dần) |
 | 2:30–3:30 | OBS-40 → OBS-44, 45 | OBS-42 → OBS-43 | OBS-41 | OBS-52 |
-| 3:30–4:00 | OBS-54 | hỗ trợ demo (phần trace/prompt) | hỗ trợ demo (phần dashboard) | OBS-51, 53, 55 |
+| 3:30–4:00 | OBS-54 | ôn phần trace/prompt cho vấn đáp | ôn phần dashboard cho vấn đáp | OBS-51, 53 |
 
 `OBS-01` cả 4 người cùng làm ở phút đầu; `.env` chờ QUANG chốt sau `OBS-03` rồi phát cho cả nhóm.
 
