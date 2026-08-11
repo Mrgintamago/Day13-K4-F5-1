@@ -91,7 +91,7 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-32 | Điền `slo.yaml` | HAN | 15m | Medium | 30 | 33 | TODO |
 | OBS-33 | 3 alert rule + runbook | HAN | 30m | High | 32 | 50 | TODO |
 | OBS-34 | Runtime check `rag_slow` | HAN | 20m | Medium | 30 | 41 | TODO |
-| **OBS-40** | Chạy incident + input challenge | QUANG | 10m | Blocker | 14, 30 | 41, 42, 43 | TODO |
+| **OBS-40** | Chạy incident + input challenge | QUANG | 10m | Blocker | 14, 30 | 41, 42, 43 | DONE |
 | OBS-41 | Triệu chứng từ Metrics | HAN | 15m | High | 40, 34 | 44 | TODO |
 | OBS-42 | Span bất thường từ Traces | SANG | 20m | High | 40 | 44 | WIP |
 | OBS-43 | Chứng minh bằng Logs | SANG | 20m | High | 40, 10 | 44 | TODO |

@@ -117,12 +117,62 @@ một hệ observability nói dối về trạng thái của chính nó còn t�
 
 - Challenge ID: `day13-k4-observability-v1` (cohort K4, incident `rag_slow`, seed 1304,
   affected feature `monitoring`, ngưỡng `latency_threshold_ms = 2000`)
-- Triệu chứng từ metrics: _(chờ OBS-41)_
-- Trace ID liên quan: _(chờ OBS-42)_
-- Log line/correlation ID liên quan: _(chờ OBS-43)_
-- Root cause: _(chờ OBS-44)_
-- Fix action: _(chờ OBS-44)_
-- Preventive measure: _(chờ OBS-44)_
+Quy trình chạy (`OBS-40`): xoá `data/logs.jsonl` → chạy `load_test.py` một lượt lúc **chưa** bật
+sự cố để có nhóm đối chiếu → `python scripts/inject_incident.py` → `python scripts/load_test.py
+--challenge --concurrency 5`. Toàn bộ chạy với `LLM_PROVIDER=mock`.
+
+**Triệu chứng từ metrics** — percentile tính từ field `latency_ms` của event `response_sent`:
+
+| Traffic | n | p50 | p95 | p99 |
+|---|---:|---:|---:|---:|
+| `qa` (đối chiếu, trước sự cố) | 8 | 151 ms | 152 ms | 152 ms |
+| `summary` (đối chiếu) | 2 | 151 ms | 1207 ms | 1207 ms |
+| **`monitoring` (challenge)** | 5 | **2652 ms** | **2652 ms** | **2652 ms** |
+
+So với ngưỡng: **2652 ms > 2000 ms** (`latency_threshold_ms` của challenge) → đã vượt. Nhưng
+**2652 ms < 3000 ms** (threshold P95 trong `config/dashboard.yaml`) → **panel dashboard vẫn xanh**.
+Đây chính là bẫy: nếu chỉ nhìn dashboard sẽ kết luận "không có sự cố". Báo cáo phải nói rõ đang
+so với ngưỡng nào.
+
+Một khác biệt nữa cần phân biệt: client (`load_test.py`) đo được **13.280 ms** mỗi request, trong
+khi app tự ghi `latency_ms = 2652 ms`. Chênh lệch không phải do đo sai — `retrieve()` dùng
+`time.sleep()` chặn trong handler `async`, nên 5 request đồng thời bị **xếp hàng** thay vì chạy
+song song (5 × 2,65s ≈ 13,3s). `latency_ms` là thời gian app xử lý một request; con số client
+thấy còn cộng thêm thời gian chờ hàng đợi. Người dùng cuối chịu con số 13,3s.
+
+**Trace ID liên quan:** `f1d677bd232273316b3cab208f20b2bd` (session `k4-challenge-s01`,
+tags `lab, monitoring, deepseek-v4-pro`). Phân rã span:
+
+| Observation | Type | Thời lượng | Tỷ trọng |
+|---|---|---:|---:|
+| `run` | GENERATION | 2652 ms | 100% |
+| **`rag_retrieve`** | SPAN | **2501 ms** | **94%** |
+| `llm_generate` | SPAN | 151 ms | 6% |
+
+**Log line / correlation ID liên quan:** `req-719b7dfe` (session `k4-challenge-s01`,
+`user_id_hash` `f00ba60b3772`) — trích nguyên văn trong
+`submission/evidence/10-challenge-logs.txt`, gồm cặp `request_received` / `response_sent` với
+`latency_ms: 2652`, `tokens_in: 57`, `tokens_out: 174`, `cost_usd: 0.002781`, `quality_score: 0.8`.
+Ba lớp khớp nhau: metric (p95 2652ms) → trace (`rag_retrieve` 2501ms) → log (đúng correlation ID
+của request đó).
+
+**Root cause:** tầng **retrieval** chặn ~2,5 giây trước khi trả tài liệu. Trong lab, `rag_slow`
+làm `mock_rag.retrieve()` gọi `time.sleep(2.5)` trước khi trả về (`app/mock_rag.py:17`).
+Đây **không phải** sự cố cục bộ của feature `monitoring`: `rag_slow` làm chậm mọi feature, chỉ là
+5 câu hỏi challenge đều mang `feature=monitoring` nên triệu chứng lộ ra ở đó. Span `llm_generate`
+giữ nguyên 151 ms chứng minh LLM vô can.
+
+**Fix action:** tắt kịch bản để khôi phục dịch vụ —
+`python scripts/inject_incident.py --scenario rag_slow --disable`, xác nhận qua `/health`
+(`OBS-45`). Trong hệ thật, tương đương rollback thay đổi ở tầng retrieval hoặc chuyển sang
+vector store dự phòng.
+
+**Preventive measure:** đặt **timeout cho `retrieve()`** (ví dụ 500 ms) và trả tài liệu rỗng kèm
+log `error_type` khi quá hạn — chậm còn hơn treo, và sự cố sẽ hiện thành lỗi đếm được thay vì
+latency âm thầm. Kèm theo là alert theo **P95 vượt 2000 ms liên tục 5 phút** (có duration để
+không nổ vì một spike). Phát hiện thêm khi điều tra: `retrieve()` dùng `time.sleep` chặn trong
+handler `async` nên một tầng chậm sẽ kéo tụt toàn bộ throughput — nên chuyển sang I/O bất đồng bộ
+hoặc đẩy xuống threadpool.
 
 > Lưu ý khi chạy challenge: đặt `LLM_PROVIDER=mock`. Với provider thật (`aibox`) latency đo được
 > là 5.000–17.600ms ngay cả khi chưa bật incident, vượt sẵn cả ngưỡng 2000ms lẫn threshold P95
