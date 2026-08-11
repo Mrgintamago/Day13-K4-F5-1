@@ -173,11 +173,14 @@ Trong hệ thật, tương đương rollback thay đổi ở tầng retrieval ho
 
 **Preventive measure — 3 việc, xếp theo mức độ cấp thiết:**
 
-1. **Hạ ngưỡng alert latency xuống 2000 ms.** Đây là lỗ hổng nghiêm trọng nhất phát hiện được:
-   `config/alert_rules.yaml` đang đặt *"P95 latency > 3000ms trong 5 phút liên tục"*, mà sự cố
-   này chỉ đẩy P95 lên **2652 ms** — **alert sẽ không nổ trong chính sự cố vừa điều tra**. Hệ
-   cảnh báo mù trước đúng kịch bản nó phải bắt. Ngưỡng nên bám `latency_threshold_ms = 2000`
-   của challenge, giữ nguyên duration 5 phút để không báo động giả theo từng spike.
+1. **Hạ ngưỡng alert latency xuống 2000 ms — ĐÃ THỰC HIỆN.** Đây là lỗ hổng nghiêm trọng nhất
+   phát hiện được: `config/alert_rules.yaml` đang đặt *"P95 latency > 3000ms trong 5 phút liên
+   tục"*, mà sự cố này chỉ đẩy P95 lên **2652 ms** — **alert sẽ không nổ trong chính sự cố vừa
+   điều tra**. Hệ cảnh báo mù trước đúng kịch bản nó phải bắt. Đã sửa điều kiện thành
+   *"P95 latency > 2000ms trong 5 phút liên tục"* (bám `latency_threshold_ms` của challenge),
+   giữ nguyên duration để không báo động giả theo từng spike, và ghi lý do vào
+   `docs/alerts.md#alert-1`. SLO `latency_p95_ms` vẫn để **3000 ms**: alert cố tình nổ **trước**
+   khi SLO bị phá, để còn thời gian xử lý thay vì báo lúc đã mất error budget.
 2. **Timeout cho `retrieve()`** (ví dụ 500 ms): quá hạn thì trả tài liệu rỗng kèm log
    `error_type`. Chậm còn hơn treo, và sự cố hiện thành **lỗi đếm được** trên panel errors thay
    vì latency âm thầm — dịch triệu chứng từ chỗ khó thấy sang chỗ dễ thấy.

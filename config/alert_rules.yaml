@@ -1,7 +1,7 @@
 alerts:
   - name: High Latency - API responses taking too long
     severity: warning
-    condition: "P95 latency > 3000ms for 5 consecutive minutes"
+    condition: "P95 latency > 2000ms for 5 consecutive minutes"
     type: symptom-based
     owner: Platform Team
     runbook: docs/alerts.md#alert-1

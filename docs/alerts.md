@@ -9,7 +9,13 @@ Mỗi alert dựa trên triệu chứng người dùng hoặc SLO, không dựa 
 - **Tên:** High Latency - API responses taking too long
 - **Severity:** warning
 - **SLI/SLO liên quan:** latency_p95_ms (objective: 3000ms, target: 99.5%)
-- **Điều kiện và thời gian duy trì:** P95 latency > 3000ms trong 5 phút liên tục
+- **Điều kiện và thời gian duy trì:** P95 latency > **2000ms** trong 5 phút liên tục
+- **Vì sao alert nổ ở 2000ms trong khi SLO là 3000ms:** alert nổ **trước** khi SLO bị phá, để còn
+  kịp xử lý. Đây không phải con số tuỳ tiện — sự cố `rag_slow` trong challenge đẩy P95 lên
+  **2652ms**: vượt ngưỡng vận hành nhưng vẫn dưới 3000ms. Với ngưỡng 3000ms cũ, **alert này sẽ
+  không nổ trong chính sự cố mà nó sinh ra để bắt**. 2000ms bám theo `latency_threshold_ms` của
+  challenge và là mức người dùng bắt đầu thấy khó chịu. Duration 5 phút giữ nguyên để một spike
+  đơn lẻ không gây báo động giả.
 - **Ảnh hưởng tới người dùng:** Người dùng phải chờ lâu hơn bình thường, có thể bỏ cuộc hoặc thử lại nhiều lần
 - **Ba bước kiểm tra đầu tiên:**
   1. **Metrics:** Mở dashboard panel Latency, kiểm tra P95 hiện tại và so với baseline
