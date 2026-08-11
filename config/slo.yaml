@@ -4,13 +4,16 @@ slis:
   latency_p95_ms:
     objective: 3000
     target: 99.5
-    note: Replace with your group's target
+    note: User-facing API. P95 < 3000ms dam bao 99.5% request tra loi trong 3s. Neu tre hon, nguoi dung se bo chot.
   error_rate_pct:
     objective: 2
     target: 99.0
+    note: Chat API chi gap loi khi he thong hoac LLM gap su co. 2% error rate la nguong chap nhan duoc cho he thong internal.
   daily_cost_usd:
     objective: 2.5
     target: 100.0
+    note: Chi phi theo token. Gioi han $2.5/ngay dam bao khong phat sinh chi phi vuot kiem soat khi dung fake LLM.
   quality_score_avg:
     objective: 0.75
     target: 95.0
+    note: Quality proxy tu mock_llm. Diem trung binh >= 0.75 dam bao tra loi co ban huu ich. 95% request dat muc nay.
