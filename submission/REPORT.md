@@ -23,9 +23,12 @@
 
 ## 4. Prompt versioning
 
-- Prompt name:
-- Version/label baseline:
-- Version/label candidate:
+- Prompt name: `day13-chat`
+- Version/label baseline: version 1 / `baseline` / `prompt_source=langfuse`
+- Version/label candidate: version 2 / `candidate` / `prompt_source=langfuse`
+  - Baseline trace ID: 782b66eb07556950c78b79b01fd6619c
+  - Candidate trace ID: a1f393cdc263280cdad1f2ecc17daed3
+- Rollback evidence: `submission/evidence/04-prompt-rollback-v1-production.png`, `submission/evidence/04-prompt-rollback-v2-production.png`
 - Trace ID của mỗi version:
 - Bằng chứng đổi label hoặc rollback:
 
