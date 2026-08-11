@@ -93,8 +93,8 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-34 | Runtime check `rag_slow` | HAN | 20m | Medium | 30 | 41 | TODO |
 | **OBS-40** | Chạy incident + input challenge | QUANG | 10m | Blocker | 14, 30 | 41, 42, 43 | DONE |
 | OBS-41 | Triệu chứng từ Metrics | HAN | 15m | High | 40, 34 | 44 | TODO |
-| OBS-42 | Span bất thường từ Traces | SANG | 20m | High | 40 | 44 | WIP |
-| OBS-43 | Chứng minh bằng Logs | SANG | 20m | High | 40, 10 | 44 | TODO |
+| OBS-42 | Span bất thường từ Traces | SANG | 20m | High | 40 | 44 | DONE |
+| OBS-43 | Chứng minh bằng Logs | SANG | 20m | High | 40, 10 | 44 | DONE |
 | **OBS-44** | Root cause + fix + preventive | QUANG | 20m | Blocker | 41, 42, 43 | 45, 52 | TODO |
 | OBS-45 | Tắt incident | QUANG | 5m | Medium | 44 | 55 | TODO |
 | OBS-50 | Gom evidence | TUONG | 20m | Blocker | 14, 23, 24, 33, 34 | 51 | WIP |
