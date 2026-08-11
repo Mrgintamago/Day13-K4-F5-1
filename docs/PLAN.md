@@ -90,7 +90,7 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | **OBS-30** | Dựng 6 panel từ `logs.jsonl` | HAN | 45m | Blocker | 14, 31 | 32, 34, 40, 41 | REVIEW |
 | OBS-32 | Điền `slo.yaml` | HAN | 15m | Medium | 30 | 33 | DONE |
 | OBS-33 | 3 alert rule + runbook | HAN | 30m | High | 32 | 50 | DONE |
-| OBS-34 | Runtime check `rag_slow` | HAN | 20m | Medium | 30 | 41 | TODO |
+| OBS-34 | Runtime check `rag_slow` | HAN | 20m | Medium | 30 | 41 | DONE |
 | **OBS-40** | Chạy incident + input challenge | QUANG | 10m | Blocker | 14, 30 | 41, 42, 43 | DONE |
 | OBS-41 | Triệu chứng từ Metrics | HAN | 15m | High | 40, 34 | 44 | TODO |
 | OBS-42 | Span bất thường từ Traces | SANG | 20m | High | 40 | 44 | DONE |
