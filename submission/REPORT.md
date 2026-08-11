@@ -53,12 +53,22 @@ Chi tiết baseline → hiện tại:
   GENERATION `run` (0.15s) lồng bên trong, cost $0.002565, 211 token. Hai observation này
   **trùng khít thời lượng** vì cùng bọc một lời gọi `LabAgent.run()`.
 
-  **Hạn chế cần lưu ý cho mục 6:** `app/agent.py` chỉ đặt `@observe` ở `LabAgent.run()`, còn
-  `mock_rag.retrieve()` và `llm.generate()` không được instrument riêng. Vì vậy **không có span
-  RAG tách biệt** — khi `rag_slow` được bật, 2.5s sẽ nằm chìm bên trong span `run` chứ không
-  hiện thành một thanh riêng trên waterfall. `OBS-42` phải lập luận bằng chênh lệch `latency_ms`
-  giữa traffic bình thường và traffic sự cố, hoặc bổ sung span cho `retrieve()` trước khi chạy
-  challenge.
+  **Bổ sung instrumentation (nhóm tự làm thêm):** ban đầu `app/agent.py` chỉ đặt `@observe` ở
+  `LabAgent.run()`, nên khi `rag_slow` bật thì 2.5s chìm bên trong span `run` và waterfall không
+  chỉ ra được thủ phạm. Nhóm đã thêm hai span con `rag_retrieve` và `llm_generate` bọc quanh
+  `retrieve()` và `llm.generate()`.
+
+  Kiểm chứng bằng một request chạy khi `rag_slow` đang bật — trace
+  `210b60fac874b783da51684a86f49bfb` (session `span-verify`, correlation `req-f1a45c0e`):
+
+  | Observation | Type | Thời lượng |
+  |---|---|---:|
+  | `run` | GENERATION | 3649 ms |
+  | **`rag_retrieve`** | SPAN | **2501 ms** |
+  | `llm_generate` | SPAN | 151 ms |
+
+  Retrieval chiếm ~69% tổng latency còn LLM chỉ 151 ms → waterfall khoanh vùng được ngay tầng
+  retrieval mà không cần đoán. Đây là dữ liệu dùng cho mục 6.
 
 ## 4. Prompt versioning
 

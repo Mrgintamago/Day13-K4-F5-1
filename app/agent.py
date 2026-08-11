@@ -11,6 +11,20 @@ from .prompt_management import resolve_prompt
 from .tracing import get_langfuse_client, observe, tracing_enabled
 
 
+@observe(name="rag_retrieve")
+def _retrieve_docs(message: str) -> list[str]:
+    """Wrap retrieval in its own span so a slow vector store shows up as its own
+    bar on the waterfall instead of hiding inside the parent generation."""
+    return retrieve(message)
+
+
+@observe(name="llm_generate")
+def _generate(llm, prompt_text: str):
+    """Sibling span to rag_retrieve — together they account for the parent's latency,
+    so a waterfall shows which of the two is responsible."""
+    return llm.generate(prompt_text)
+
+
 @dataclass
 class AgentResult:
     answer: str
@@ -29,7 +43,7 @@ class LabAgent:
     @observe(as_type="generation", capture_input=False, capture_output=False)
     def run(self, user_id: str, feature: str, session_id: str, message: str) -> AgentResult:
         started = time.perf_counter()
-        docs = retrieve(message)
+        docs = _retrieve_docs(message)
         langfuse_client = get_langfuse_client()
         prompt = resolve_prompt(
             langfuse_client,
@@ -38,7 +52,7 @@ class LabAgent:
             message=message,
             enabled=tracing_enabled(),
         )
-        response = self.llm.generate(prompt.text)
+        response = _generate(self.llm, prompt.text)
         quality_score = self._heuristic_quality(message, response.text, docs)
         latency_ms = int((time.perf_counter() - started) * 1000)
         cost_usd = self._estimate_cost(response.usage.input_tokens, response.usage.output_tokens)
