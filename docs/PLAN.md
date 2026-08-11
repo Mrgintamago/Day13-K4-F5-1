@@ -20,6 +20,9 @@ Sprint: 4 giờ lab · Board: `OBS` · Spec kỹ thuật: [SPEC.md](SPEC.md) · 
 
 **Bẫy kỹ thuật**
 
+2b. **Không ai được sửa TODO trước khi `OBS-02` chụp xong baseline.** Baseline là số đo lúc TODO
+   chưa sửa; sửa trước là mất vĩnh viễn evidence `00-baseline-validate-logs.txt`. Vì vậy
+   `OBS-02` chặn `OBS-10`, `OBS-12`, `OBS-13` — TUONG làm việc này **đầu tiên**, 10 phút.
 3. `scrub_event` phải đứng **trước** `JsonlFileProcessor` trong `app/logging_config.py`.
    `JsonlFileProcessor` tự render JSON và ghi file ngay tại chỗ → processor đặt sau nó
    **không có tác dụng lên `data/logs.jsonl`**, code trông "có scrub" mà log vẫn đầy PII.
@@ -70,13 +73,13 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 
 | ID | Tóm tắt | Assignee | Est | Ưu tiên | Blocked by | Blocks | Status |
 |---|---|---|---:|---|---|---|---|
-| **OBS-01** | Dựng venv + `.env` | QUANG | 15m | Blocker | — | 02, 03, 10, 12, 31 | TODO |
-| OBS-02 | Chạy baseline, lưu số gốc | TUONG | 10m | High | 01 | 50 | TODO |
+| **OBS-01** | Dựng venv + `.env` |  Nhóm | 15m | Blocker | — | 02, 03, 31 | TODO |
+| **OBS-02** | Chạy baseline, lưu số gốc | TUONG | 10m | Blocker | 01 | 10, 12, 13, 50 | TODO |
 | OBS-03 | Langfuse project + key | SANG | 15m | Blocker | 01 | 20, 24 | TODO |
-| **OBS-10** | Correlation ID middleware | QUANG | 20m | Blocker | 01 | 11, 14, 22, 43 | TODO |
+| **OBS-10** | Correlation ID middleware | QUANG | 20m | Blocker | 02 | 11, 14, 22, 43 | TODO |
 | **OBS-11** | Enrich log context `/chat` | QUANG | 15m | High | 10 | 14 | TODO |
-| OBS-12 | Đăng ký PII processor | SANG | 10m | Blocker | 01 | 13, 14 | TODO |
-| OBS-13 | Bổ sung PII pattern | TUONG | 20m | Medium | 12 | 14 | TODO |
+| OBS-12 | Đăng ký PII processor | SANG | 10m | Blocker | 02 | 14 | TODO |
+| OBS-13 | Bổ sung PII pattern | TUONG | 20m | Medium | 02 | 14 | TODO |
 | **OBS-14** | `validate_logs.py` ≥ 80 | QUANG | 15m | Blocker | 10, 11, 12, 13 | 24, 30, 40, 50 | TODO |
 | OBS-20 | Prompt v1 (`baseline`+`production`) | SANG | 15m | High | 03 | 21 | TODO |
 | OBS-21 | Prompt v2 (`candidate`) | SANG | 10m | High | 20 | 22 | TODO |
@@ -186,11 +189,17 @@ Không tự tạo hay sửa `config/challenge.json` trong bất kỳ trường h
 > label ảnh hưởng tới prompt version ghi trong trace của người đó.
 
 ### OBS-02 · Chạy baseline và lưu số liệu gốc
-- **Assignee:** TUONG · **Est:** 10m · **Priority:** High
+- **Assignee:** TUONG · **Est:** 10m · **Priority:** Blocker
 - **Blocked by:** `OBS-01`
-- **Blocks:** `OBS-50`
+- **Blocks:** `OBS-10`, `OBS-12`, `OBS-13`, `OBS-50`
 - **Việc:** `python scripts/load_test.py` → `python scripts/validate_logs.py`; lưu output baseline (dự kiến điểm thấp vì TODO chưa làm) vào `submission/evidence/00-baseline-validate-logs.txt`.
 - **DoD:** có `data/logs.jsonl`; file baseline đã lưu; con số baseline ghi vào REPORT mục 2.
+
+> **Vì sao OBS-02 chặn cả EPIC-1:** baseline theo định nghĩa là số đo **khi TODO chưa sửa**.
+> Ai sửa `middleware.py`, `logging_config.py` hay `pii.py` trước khi TUONG chạy xong bước này
+> là xoá vĩnh viễn evidence `00-baseline-validate-logs.txt` — không dựng lại được trừ khi
+> `git stash` toàn bộ. 10 phút của TUONG chặn 3 người, nên đây là việc đầu tiên sau `OBS-01`.
+> Trong lúc chờ: QUANG đọc `app/middleware.py`, SANG làm `OBS-03`, HAN làm `OBS-31`.
 
 ### OBS-03 · Tạo project Langfuse và điền key
 - **Assignee:** SANG · **Est:** 15m · **Priority:** Blocker
@@ -205,7 +214,7 @@ Không tự tạo hay sửa `config/challenge.json` trong bất kỳ trường h
 
 ### OBS-10 · Correlation ID middleware
 - **Assignee:** QUANG · **Est:** 20m · **Priority:** Blocker
-- **Blocked by:** `OBS-01`
+- **Blocked by:** `OBS-02` (baseline phải chụp xong trước khi sửa TODO đầu tiên)
 - **Blocks:** `OBS-11`, `OBS-14`, `OBS-22`, `OBS-43`
 - **File:** `app/middleware.py:13,16,20,28`
 - **Việc:** `clear_contextvars()` đầu request → lấy `x-request-id` hoặc sinh `req-<8 hex>` → `bind_contextvars(correlation_id=...)` → trả header `x-request-id` và `x-response-time-ms`.
@@ -221,7 +230,7 @@ Không tự tạo hay sửa `config/challenge.json` trong bất kỳ trường h
 
 ### OBS-12 · Đăng ký PII processor vào pipeline structlog
 - **Assignee:** SANG · **Est:** 10m · **Priority:** Blocker
-- **Blocked by:** `OBS-01`
+- **Blocked by:** `OBS-02`
 - **Blocks:** `OBS-14`
 - **File:** `app/logging_config.py:45`
 - **Việc:** bỏ comment `scrub_event`, đặt **trước** `JsonlFileProcessor()` và `JSONRenderer()`.
@@ -229,7 +238,9 @@ Không tự tạo hay sửa `config/challenge.json` trong bất kỳ trường h
 
 ### OBS-13 · Bổ sung PII pattern
 - **Assignee:** TUONG · **Est:** 20m · **Priority:** Medium
-- **Blocked by:** `OBS-12`
+- **Blocked by:** `OBS-02` — **không** cần chờ `OBS-12`: `pii.py` và `logging_config.py` là hai file
+  rời nhau, `tests/test_pii.py` gọi thẳng `scrub_text()` nên chạy được dù processor chưa đăng ký.
+  TUONG làm ngay sau khi chụp baseline xong, song song với SANG.
 - **Blocks:** `OBS-14`
 - **File:** `app/pii.py:11`
 - **Việc:** thêm regex passport VN (`\b[A-Z]\d{7}\b`) và từ khóa địa chỉ; chạy `python -m pytest tests/test_pii.py -q`.
@@ -472,10 +483,12 @@ flowchart TD
         T55["OBS-55<br/>demo"]
     end
 
-    T01 --> T02 & T03 & T10 & T12 & T31
+    T01 --> T02 & T03 & T31
+    T02 --> T10 & T12 & T13
     T10 --> T11 & T22 & T43
     T11 --> T14
-    T12 --> T13 --> T14
+    T12 --> T14
+    T13 --> T14
     T10 --> T14
     T03 --> T20 --> T21 --> T22 --> T23
     T03 --> T24
@@ -494,10 +507,10 @@ flowchart TD
     class T03,T12,T20,T21,T22,T23,T42,T43 sang
     class T30,T31,T32,T33,T34,T41 han
     class T02,T13,T50,T51,T52,T53,T55 tuong
-    class T01,T10,T11,T14,T30,T40,T44,T52,T54,T55 crit
+    class T01,T02,T10,T11,T14,T30,T40,T44,T52,T54,T55 crit
 ```
 
-**Đường găng:** `OBS-01 → OBS-10 → OBS-11 → OBS-14 → OBS-30 → OBS-40 → OBS-44 → OBS-52 → OBS-54 → OBS-55`.
+**Đường găng:** `OBS-01 → OBS-02 → OBS-10 → OBS-11 → OBS-14 → OBS-30 → OBS-40 → OBS-44 → OBS-52 → OBS-54 → OBS-55`.
 Chậm bất kỳ ticket nào trên đường này là chậm cả nhóm.
 
 ## Quy trình Git
@@ -537,7 +550,7 @@ Rủi ro: conflict khi 2 người sửa cùng file và khó tách công.
 
 | Thời gian | QUANG | SANG | HAN | TUONG |
 |---|---|---|---|---|
-| 0:00–0:30 | OBS-01, chốt `.env` chung | OBS-01, OBS-03 | OBS-01, OBS-31 | OBS-01, OBS-02 |
+| 0:00–0:30 | OBS-01, chốt `.env` chung, đọc `middleware.py` | OBS-01, OBS-03 | OBS-01, OBS-31 | OBS-01 → **OBS-02 (làm trước tiên)** |
 | 0:30–1:30 | OBS-10, 11 → **OBS-14** | OBS-12 → OBS-20, 21 | đọc `dashboard.yaml`, dựng khung chart | OBS-13 |
 | 1:30–2:30 | OBS-24, review + merge PR | OBS-22, 23 | OBS-30, 32, 33, 34 | OBS-50 (gom dần) |
 | 2:30–3:30 | OBS-40 → OBS-44, 45 | OBS-42 → OBS-43 | OBS-41 | OBS-52 |
