@@ -45,13 +45,20 @@ Chi tiết baseline → hiện tại:
   request chứa email, số điện thoại VN, CCCD, số thẻ, passport và địa chỉ — log chỉ còn
   `[REDACTED_EMAIL]`, `[REDACTED_PHONE_VN]`, `[REDACTED_CCCD]`, `[REDACTED_CREDIT_CARD]`,
   `[REDACTED_PASSPORT]`, `[REDACTED_ADDRESS_VN]`, không còn chuỗi nguyên văn nào.
-- Evidence trace waterfall: _(chờ OBS-24 — cần ảnh chụp UI Langfuse)_
-- Giải thích một span đáng chú ý: trace mẫu `b90d099f068854c7f281456af859d499` (session `s10`)
-  có **đúng 1 span** tên `run`, type `GENERATION`. `app/agent.py` chỉ đặt `@observe` ở
-  `LabAgent.run()`, còn `mock_rag.retrieve()` và `llm.generate()` không được instrument riêng,
-  nên waterfall chỉ có một thanh. **Đây là hạn chế cần lưu ý cho mục 6:** không có span RAG
-  tách biệt để chỉ ra "span nào chiếm phần lớn latency" — phải lập luận bằng `latency_ms`
-  trong log, hoặc bổ sung span cho `retrieve()` trước khi chạy challenge.
+- Evidence trace waterfall: `submission/evidence/04c-trace-waterfall.png` (một trace đầy đủ) và
+  `submission/evidence/04b-traces-list.png` (danh sách, lọc theo tag `deepseek-v4-pro`:
+  44 observation type GENERATION + 44 type SPAN).
+- Giải thích một span đáng chú ý: trace `b90d099f068854c7f281456af859d499` (session `s10`,
+  user `105a9cef3903` — đã hash) có **2 observation**: một root SPAN `run` (0.15s) và một
+  GENERATION `run` (0.15s) lồng bên trong, cost $0.002565, 211 token. Hai observation này
+  **trùng khít thời lượng** vì cùng bọc một lời gọi `LabAgent.run()`.
+
+  **Hạn chế cần lưu ý cho mục 6:** `app/agent.py` chỉ đặt `@observe` ở `LabAgent.run()`, còn
+  `mock_rag.retrieve()` và `llm.generate()` không được instrument riêng. Vì vậy **không có span
+  RAG tách biệt** — khi `rag_slow` được bật, 2.5s sẽ nằm chìm bên trong span `run` chứ không
+  hiện thành một thanh riêng trên waterfall. `OBS-42` phải lập luận bằng chênh lệch `latency_ms`
+  giữa traffic bình thường và traffic sự cố, hoặc bổ sung span cho `retrieve()` trước khi chạy
+  challenge.
 
 ## 4. Prompt versioning
 

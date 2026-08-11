@@ -85,8 +85,8 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-21 | Prompt v2 (`candidate`) | SANG | 10m | High | 20 | 22 | TODO |
 | OBS-22 | Chạy 2 label, thu 2 trace ID | SANG | 15m | High | 21, 10 | 23, 51 | TODO |
 | OBS-23 | Promote → rollback `production` | SANG | 15m | High | 22 | 50 | TODO |
-| OBS-24 | ≥10 traces + waterfall | QUANG | 15m | High | 14, 03 | 50 | WIP |
-| OBS-31 | `validate_dashboard.py` 6/6 | HAN | 5m | High | 01 | 30 | TODO |
+| OBS-24 | ≥10 traces + waterfall | QUANG | 15m | High | 14, 03 | 50 | DONE |
+| OBS-31 | `validate_dashboard.py` 6/6 | HAN | 5m | High | 01 | 30 | WIP |
 | **OBS-30** | Dựng 6 panel từ `logs.jsonl` | HAN | 45m | Blocker | 14, 31 | 32, 34, 40, 41 | TODO |
 | OBS-32 | Điền `slo.yaml` | HAN | 15m | Medium | 30 | 33 | TODO |
 | OBS-33 | 3 alert rule + runbook | HAN | 30m | High | 32 | 50 | TODO |
@@ -97,10 +97,10 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-43 | Chứng minh bằng Logs | SANG | 20m | High | 40, 10 | 44 | TODO |
 | **OBS-44** | Root cause + fix + preventive | QUANG | 20m | Blocker | 41, 42, 43 | 45, 52 | TODO |
 | OBS-45 | Tắt incident | QUANG | 5m | Medium | 44 | 55 | TODO |
-| OBS-50 | Gom evidence | TUONG | 20m | Blocker | 14, 23, 24, 33, 34 | 51 | TODO |
-| OBS-51 | REPORT mục 1–5 | TUONG | 20m | Blocker | 50, 22 | 53, 54 | TODO |
+| OBS-50 | Gom evidence | TUONG | 20m | Blocker | 14, 23, 24, 33, 34 | 51 | WIP |
+| OBS-51 | REPORT mục 1–5 | TUONG | 20m | Blocker | 50, 22 | 53, 54 | WIP |
 | **OBS-52** | REPORT mục 6 (challenge) | TUONG | 15m | Blocker | 44 | 54 | TODO |
-| OBS-53 | REPORT mục 7 (đóng góp) | TUONG | 10m | High | 51 | 54 | TODO |
+| OBS-53 | REPORT mục 7 (đóng góp) | TUONG | 10m | High | 51 | 54 | WIP |
 | **OBS-54** | Cổng chất lượng trước nộp | QUANG | 15m | Blocker | 51, 52, 53 | 55 | TODO |
 | **OBS-55** | Kịch bản demo | TUONG + all | 15m | High | 54, 45 | — | TODO |
 
@@ -154,23 +154,27 @@ challenge thấp hơn baseline; đó là hành vi bình thường, không phải
 Trạng thái còn lại:
 
 - `.venv` đã dựng bằng **Python 3.11.9**, `pip install -r requirements.txt` xanh, `pytest -q`
-  báo **28 passed** trên 11 file test. `.env` đã có đủ các biến Langfuse bắt buộc (không commit),
+  báo **33 passed** trên 11 file test. `.env` đã có đủ các biến Langfuse bắt buộc (không commit),
   `data/logs.jsonl` đã được sinh.
-- Board hiện có **5 ticket `DONE`** (`OBS-01`, `OBS-02`, `OBS-03`, `OBS-10`, `OBS-11`) và
-  **25 ticket `TODO`**; chưa có ticket ở `WIP` hoặc `REVIEW`.
-- **2 dòng `TODO` trong `app/`**: `logging_config.py:45` (đăng ký PII processor, `OBS-12`) và
-  `pii.py:11` (bổ sung pattern, `OBS-13`). Các TODO của `OBS-10` và `OBS-11` đã hoàn tất.
+- Board hiện có **8 ticket `DONE`** (`OBS-01`, `OBS-02`, `OBS-03`, `OBS-10`…`OBS-14`),
+  **5 ticket `WIP`** (`OBS-24`, `OBS-31`, `OBS-50`, `OBS-51`, `OBS-53`) và **17 ticket `TODO`**;
+  chưa có ticket ở `REVIEW`.
+- Không còn dòng `TODO` trong `app/`: PII processor đã được đăng ký đúng trước
+  `JsonlFileProcessor` (`OBS-12`) và hai pattern passport/địa chỉ đã được bổ sung (`OBS-13`).
 - Kiểm tra cục bộ hiện tại: `validate_logs.py` đạt **100/100** (4/4 mục pass, 0 PII leak) và
-  `validate_dashboard.py` báo **6/6 panel hợp lệ**. `OBS-14` và `OBS-31` vẫn giữ `TODO` vì chưa đủ
-  dependency/evidence theo DoD (`01-validate-logs.txt`, `05-validate-dashboard.txt`).
-- Evidence hiện mới có `00-baseline-validate-logs.txt`; REPORT mới ghi số liệu baseline, các mục
-  trace, prompt, dashboard, challenge và đóng góp cá nhân vẫn chưa hoàn tất.
+  `validate_dashboard.py` báo **6/6 panel hợp lệ**. `OBS-14` đã có evidence và chuyển `DONE`;
+  `OBS-31` giữ `WIP` vì còn thiếu `05-validate-dashboard.txt`.
+- Langfuse hiện có **66 traces**, nhưng `OBS-24` giữ `WIP` vì chưa có ảnh danh sách traces và
+  waterfall. Prompt production v1 đã hoạt động; các label/version của `OBS-20`…`OBS-23` chưa đủ evidence.
+- Evidence hiện có 4 file (baseline, validator cuối, correlation ID, PII redaction), nên `OBS-50`
+  đang `WIP`. REPORT mục 1–5 đã điền phần có dữ liệu thật nhưng còn nhiều placeholder (`OBS-51 WIP`);
+  bảng đóng góp có 3/4 thành viên (`OBS-53 WIP`).
 - **12 dòng `TODO` trong `config/alert_rules.yaml`**: 3 rule × 4 field
   (`name`, `severity`, `condition`, `owner`). `type: symptom-based` và `runbook:` đã điền sẵn —
   giữ nguyên `type`, mỗi rule phải có mục tương ứng trong `docs/alerts.md#alert-1..3`.
-- `app/pii.py` đã có sẵn **4 pattern** (`email`, `phone_vn`, `cccd`, `credit_card`) — đúng bằng bộ
-  detector của `validate_logs.py`. Nghĩa là `OBS-13` (passport + địa chỉ) **không làm tăng điểm
-  validator**; nó là phần chất lượng để bảo vệ khi vấn đáp. Ưu tiên thấp nhất trong EPIC-1.
+- `app/pii.py` hiện có **6 pattern** (`email`, `phone_vn`, `cccd`, `credit_card`, `passport`,
+  `address_vn`). Hai pattern mới của `OBS-13` không làm tăng điểm `validate_logs.py` vì validator
+  chỉ dò 4 loại ban đầu, nhưng hoàn thiện phạm vi PII theo DoD.
 
 Không tự tạo hay sửa `config/challenge.json` trong bất kỳ trường hợp nào (RULES.md).
 
