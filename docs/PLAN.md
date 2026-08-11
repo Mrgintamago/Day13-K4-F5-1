@@ -74,7 +74,7 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | ID | Tóm tắt | Assignee | Est | Ưu tiên | Blocked by | Blocks | Status |
 |---|---|---|---:|---|---|---|---|
 | **OBS-01** | Dựng venv + `.env` |  Nhóm | 15m | Blocker | — | 02, 03, 31 | TODO |
-| **OBS-02** | Chạy baseline, lưu số gốc | TUONG | 10m | Blocker | 01 | 10, 12, 13, 50 | TODO |
+| **OBS-02** | Chạy baseline, lưu số gốc | TUONG | 10m | Blocker | 01 | 10, 12, 13, 50 | DONE |
 | OBS-03 | Langfuse project + key | SANG | 15m | Blocker | 01 | 20, 24 | TODO |
 | **OBS-10** | Correlation ID middleware | QUANG | 20m | Blocker | 02 | 11, 14, 22, 43 | TODO |
 | **OBS-11** | Enrich log context `/chat` | QUANG | 15m | High | 10 | 14 | TODO |
