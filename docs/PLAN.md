@@ -154,10 +154,17 @@ challenge thấp hơn baseline; đó là hành vi bình thường, không phải
 Trạng thái còn lại:
 
 - `.venv` đã dựng bằng **Python 3.11.9**, `pip install -r requirements.txt` xanh, `pytest -q`
-  báo **22 passed** trên 10 file test. Chưa có `.env`, chưa có `data/logs.jsonl`.
-- Toàn bộ board đang ở `TODO`.
-- **7 dòng `TODO` trong `app/`**: `middleware.py:13,16,20,28` (4), `main.py:47` (1),
-  `logging_config.py:45` (1), `pii.py:11` (1).
+  báo **28 passed** trên 11 file test. `.env` đã có đủ các biến Langfuse bắt buộc (không commit),
+  `data/logs.jsonl` đã được sinh.
+- Board hiện có **5 ticket `DONE`** (`OBS-01`, `OBS-02`, `OBS-03`, `OBS-10`, `OBS-11`) và
+  **25 ticket `TODO`**; chưa có ticket ở `WIP` hoặc `REVIEW`.
+- **2 dòng `TODO` trong `app/`**: `logging_config.py:45` (đăng ký PII processor, `OBS-12`) và
+  `pii.py:11` (bổ sung pattern, `OBS-13`). Các TODO của `OBS-10` và `OBS-11` đã hoàn tất.
+- Kiểm tra cục bộ hiện tại: `validate_logs.py` đạt **100/100** (4/4 mục pass, 0 PII leak) và
+  `validate_dashboard.py` báo **6/6 panel hợp lệ**. `OBS-14` và `OBS-31` vẫn giữ `TODO` vì chưa đủ
+  dependency/evidence theo DoD (`01-validate-logs.txt`, `05-validate-dashboard.txt`).
+- Evidence hiện mới có `00-baseline-validate-logs.txt`; REPORT mới ghi số liệu baseline, các mục
+  trace, prompt, dashboard, challenge và đóng góp cá nhân vẫn chưa hoàn tất.
 - **12 dòng `TODO` trong `config/alert_rules.yaml`**: 3 rule × 4 field
   (`name`, `severity`, `condition`, `owner`). `type: symptom-based` và `runbook:` đã điền sẵn —
   giữ nguyên `type`, mỗi rule phải có mục tương ứng trong `docs/alerts.md#alert-1..3`.
