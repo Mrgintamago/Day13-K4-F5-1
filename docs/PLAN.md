@@ -78,9 +78,9 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-03 | Langfuse project + key | SANG | 15m | Blocker | 01 | 20, 24 | DONE |
 | **OBS-10** | Correlation ID middleware | QUANG | 20m | Blocker | 02 | 11, 14, 22, 43 | DONE |
 | **OBS-11** | Enrich log context `/chat` | QUANG | 15m | High | 10 | 14 | DONE |
-| OBS-12 | Đăng ký PII processor | SANG | 10m | Blocker | 02 | 14 | TODO |
-| OBS-13 | Bổ sung PII pattern | TUONG | 20m | Medium | 02 | 14 | TODO |
-| **OBS-14** | `validate_logs.py` ≥ 80 | QUANG | 15m | Blocker | 10, 11, 12, 13 | 24, 30, 40, 50 | TODO |
+| OBS-12 | Đăng ký PII processor | SANG | 10m | Blocker | 02 | 14 | DONE |
+| OBS-13 | Bổ sung PII pattern | TUONG | 20m | Medium | 02 | 14 | DONE |
+| **OBS-14** | `validate_logs.py` ≥ 80 | QUANG | 15m | Blocker | 10, 11, 12, 13 | 24, 30, 40, 50 | DONE |
 | OBS-20 | Prompt v1 (`baseline`+`production`) | SANG | 15m | High | 03 | 21 | TODO |
 | OBS-21 | Prompt v2 (`candidate`) | SANG | 10m | High | 20 | 22 | TODO |
 | OBS-22 | Chạy 2 label, thu 2 trace ID | SANG | 15m | High | 21, 10 | 23, 51 | TODO |
