@@ -81,10 +81,10 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-12 | Đăng ký PII processor | SANG | 10m | Blocker | 02 | 14 | DONE |
 | OBS-13 | Bổ sung PII pattern | TUONG | 20m | Medium | 02 | 14 | DONE |
 | **OBS-14** | `validate_logs.py` ≥ 80 | QUANG | 15m | Blocker | 10, 11, 12, 13 | 24, 30, 40, 50 | DONE |
-| OBS-20 | Prompt v1 (`baseline`+`production`) | SANG | 15m | High | 03 | 21 | TODO |
-| OBS-21 | Prompt v2 (`candidate`) | SANG | 10m | High | 20 | 22 | TODO |
-| OBS-22 | Chạy 2 label, thu 2 trace ID | SANG | 15m | High | 21, 10 | 23, 51 | TODO |
-| OBS-23 | Promote → rollback `production` | SANG | 15m | High | 22 | 50 | TODO |
+| OBS-20 | Prompt v1 (`baseline`+`production`) | SANG | 15m | High | 03 | 21 | DONE |
+| OBS-21 | Prompt v2 (`candidate`) | SANG | 10m | High | 20 | 22 | DONE |
+| OBS-22 | Chạy 2 label, thu 2 trace ID | SANG | 15m | High | 21, 10 | 23, 51 | DONE |
+| OBS-23 | Promote → rollback `production` | SANG | 15m | High | 22 | 50 | DONE |
 | OBS-24 | ≥10 traces + waterfall | QUANG | 15m | High | 14, 03 | 50 | DONE |
 | OBS-31 | `validate_dashboard.py` 6/6 | HAN | 5m | High | 01 | 30 | WIP |
 | **OBS-30** | Dựng 6 panel từ `logs.jsonl` | HAN | 45m | Blocker | 14, 31 | 32, 34, 40, 41 | TODO |
@@ -93,7 +93,7 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-34 | Runtime check `rag_slow` | HAN | 20m | Medium | 30 | 41 | TODO |
 | **OBS-40** | Chạy incident + input challenge | QUANG | 10m | Blocker | 14, 30 | 41, 42, 43 | TODO |
 | OBS-41 | Triệu chứng từ Metrics | HAN | 15m | High | 40, 34 | 44 | TODO |
-| OBS-42 | Span bất thường từ Traces | SANG | 20m | High | 40 | 44 | TODO |
+| OBS-42 | Span bất thường từ Traces | SANG | 20m | High | 40 | 44 | WIP |
 | OBS-43 | Chứng minh bằng Logs | SANG | 20m | High | 40, 10 | 44 | TODO |
 | **OBS-44** | Root cause + fix + preventive | QUANG | 20m | Blocker | 41, 42, 43 | 45, 52 | TODO |
 | OBS-45 | Tắt incident | QUANG | 5m | Medium | 44 | 55 | TODO |
@@ -156,17 +156,22 @@ Trạng thái còn lại:
 - `.venv` đã dựng bằng **Python 3.11.9**, `pip install -r requirements.txt` xanh, `pytest -q`
   báo **33 passed** trên 11 file test. `.env` đã có đủ các biến Langfuse bắt buộc (không commit),
   `data/logs.jsonl` đã được sinh.
-- Board hiện có **8 ticket `DONE`** (`OBS-01`, `OBS-02`, `OBS-03`, `OBS-10`…`OBS-14`),
-  **5 ticket `WIP`** (`OBS-24`, `OBS-31`, `OBS-50`, `OBS-51`, `OBS-53`) và **17 ticket `TODO`**;
+- Board hiện có **9 ticket `DONE`** (`OBS-01`, `OBS-02`, `OBS-03`, `OBS-10`…`OBS-14`, `OBS-24`),
+  **5 ticket `WIP`** (`OBS-31`, `OBS-42`, `OBS-50`, `OBS-51`, `OBS-53`) và **16 ticket `TODO`**;
   chưa có ticket ở `REVIEW`.
 - Không còn dòng `TODO` trong `app/`: PII processor đã được đăng ký đúng trước
   `JsonlFileProcessor` (`OBS-12`) và hai pattern passport/địa chỉ đã được bổ sung (`OBS-13`).
 - Kiểm tra cục bộ hiện tại: `validate_logs.py` đạt **100/100** (4/4 mục pass, 0 PII leak) và
   `validate_dashboard.py` báo **6/6 panel hợp lệ**. `OBS-14` đã có evidence và chuyển `DONE`;
   `OBS-31` giữ `WIP` vì còn thiếu `05-validate-dashboard.txt`.
-- Langfuse hiện có **66 traces**, nhưng `OBS-24` giữ `WIP` vì chưa có ảnh danh sách traces và
-  waterfall. Prompt production v1 đã hoạt động; các label/version của `OBS-20`…`OBS-23` chưa đủ evidence.
-- Evidence hiện có 4 file (baseline, validator cuối, correlation ID, PII redaction), nên `OBS-50`
+- `OBS-24` đã `DONE`: Langfuse có ít nhất 66 traces và đã lưu ảnh danh sách cùng waterfall
+  (`04b-traces-list.png`, `04c-trace-waterfall.png`). Prompt production v1 đã hoạt động;
+  các label/version của `OBS-20`…`OBS-23` chưa đủ evidence.
+- Instrumentation đã có span con `rag_retrieve` và `llm_generate`; trace practice `rag_slow` đã
+  khoanh vùng retrieval chiếm khoảng 69% latency. `OBS-42` ở `WIP` vì còn chờ trace/evidence từ
+  lần chạy challenge chính thức (`OBS-40`).
+- Evidence hiện có 6 file (baseline, validator cuối, correlation ID, PII redaction, danh sách trace,
+  waterfall), nên `OBS-50`
   đang `WIP`. REPORT mục 1–5 đã điền phần có dữ liệu thật nhưng còn nhiều placeholder (`OBS-51 WIP`);
   bảng đóng góp có 3/4 thành viên (`OBS-53 WIP`).
 - **12 dòng `TODO` trong `config/alert_rules.yaml`**: 3 rule × 4 field

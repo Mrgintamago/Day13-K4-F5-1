@@ -20,8 +20,8 @@
 
 - Điểm `validate_logs.py`: baseline **30/100** → hiện tại **100/100** (4/4 mục PASSED).
   Baseline: `submission/evidence/00-baseline-validate-logs.txt` · Sau khi sửa: `submission/evidence/01-validate-logs.txt`
-- Tổng số traces: **66** trên Langfuse (yêu cầu tối thiểu 10), sinh bằng 2 lượt
-  `python scripts/load_test.py --concurrency 5`
+- Tổng số traces: **77** trên Langfuse tại thời điểm ghi (yêu cầu tối thiểu 10), sinh bằng nhiều
+  lượt `python scripts/load_test.py --concurrency 5`. Con số này còn tăng khi chạy challenge.
 - Số PII leak còn lại: **0** — `Potential PII leaks detected: 0`
 - Link/đường dẫn dashboard: _(chờ OBS-30)_
 
@@ -74,29 +74,26 @@ Chi tiết baseline → hiện tại:
 ## 4. Prompt versioning
 
 - Prompt name: `day13-chat`
-<<<<<<< HEAD
-- Version/label baseline: version 1 / `baseline` / `prompt_source=langfuse`
-- Version/label candidate: version 2 / `candidate` / `prompt_source=langfuse`
-  - Baseline trace ID: 782b66eb07556950c78b79b01fd6619c
-  - Candidate trace ID: a1f393cdc263280cdad1f2ecc17daed3
-- Rollback evidence: `submission/evidence/04-prompt-rollback-v1-production.png`, `submission/evidence/04-prompt-rollback-v2-production.png`
-- Trace ID của mỗi version:
-- Bằng chứng đổi label hoặc rollback:
-=======
 - Version/label baseline: **v1**, labels `baseline` + `production`
 - Version/label candidate: **v2**, label `candidate`
-- Trace ID của mỗi version — chạy **cùng một input** (`"So sanh hai prompt version"`,
-  feature `monitoring`) với hai label khác nhau:
+- Trace ID của mỗi version — chạy **cùng một input** với hai label khác nhau (`OBS-22`):
 
 | Label | Prompt version | Trace ID | `prompt_source` |
 |---|---:|---|---|
-| `baseline` | 1 | `0103043eb54840a173dff8d04241a4bf` | `langfuse` |
-| `candidate` | 2 | `3f27bd32300c6486594a98bab3f14590` | `langfuse` |
+| `baseline` | 1 | `782b66eb07556950c78b79b01fd6619c` | `langfuse` |
+| `candidate` | 2 | `a1f393cdc263280cdad1f2ecc17daed3` | `langfuse` |
 
-- Bằng chứng đổi label hoặc rollback: _(chờ OBS-23 — cần ảnh trước/sau khi chuyển `production`
-  từ v1 sang v2 rồi rollback về v1, lưu `04-prompt-rollback.png`)_
+- Bằng chứng đổi label hoặc rollback (`OBS-23`):
+  `submission/evidence/04-prompt-rollback-v2-production.png` (promote `production` → v2) và
+  `submission/evidence/04-prompt-rollback-v1-production.png` (rollback `production` → v1).
+  Rollback chỉ là trỏ lại con trỏ label, không cần deploy lại code — đó là lợi ích chính của
+  mô hình version bất biến + label di động.
 
-Cả hai trace đều ghi `prompt_source: langfuse` (không phải `local` hay `local-fallback`), nên
+Một lượt chạy độc lập thứ hai (input `"So sanh hai prompt version"`, session `cmp-baseline` /
+`cmp-candidate`) cho kết quả trùng khớp: trace `0103043eb54840a173dff8d04241a4bf` → version 1,
+trace `3f27bd32300c6486594a98bab3f14590` → version 2.
+
+Tất cả trace trên đều ghi `prompt_source: langfuse` (không phải `local` hay `local-fallback`), nên
 version trong trace là version thật lấy từ Langfuse chứ không phải fallback cục bộ.
 
 **Sự cố đã gặp và cách xử lý (đáng ghi lại):** có một khoảng thời gian label `production` bị mất
@@ -107,7 +104,6 @@ gọi Langfuse API kiểm từng label (`production` → `NotFound`) rồi bắn
 metadata trace. Khắc phục bằng cách gán lại label `production` cho v1 trên Langfuse — **không sửa
 code để ghi version giả** (RULES.md). Đây đúng là bài học của mục "fallback phải trung thực":
 một hệ observability nói dối về trạng thái của chính nó còn tệ hơn không có gì.
->>>>>>> 9b4c6e0007e45f3774f01d38682b2b6428fb53c7
 
 ## 5. Dashboard, SLO và alerts
 
