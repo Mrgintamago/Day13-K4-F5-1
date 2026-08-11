@@ -95,8 +95,8 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-41 | Triệu chứng từ Metrics | HAN | 15m | High | 40, 34 | 44 | TODO |
 | OBS-42 | Span bất thường từ Traces | SANG | 20m | High | 40 | 44 | DONE |
 | OBS-43 | Chứng minh bằng Logs | SANG | 20m | High | 40, 10 | 44 | DONE |
-| **OBS-44** | Root cause + fix + preventive | QUANG | 20m | Blocker | 41, 42, 43 | 45, 52 | TODO |
-| OBS-45 | Tắt incident | QUANG | 5m | Medium | 44 | 55 | TODO |
+| **OBS-44** | Root cause + fix + preventive | QUANG | 20m | Blocker | 41, 42, 43 | 45, 52 | DONE |
+| OBS-45 | Tắt incident | QUANG | 5m | Medium | 44 | 55 | DONE |
 | OBS-50 | Gom evidence | TUONG | 20m | Blocker | 14, 23, 24, 33, 34 | 51 | WIP |
 | OBS-51 | REPORT mục 1–5 | TUONG | 20m | Blocker | 50, 22 | 53, 54 | WIP |
 | **OBS-52** | REPORT mục 6 (challenge) | TUONG | 15m | Blocker | 44 | 54 | TODO |

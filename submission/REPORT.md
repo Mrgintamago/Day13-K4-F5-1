@@ -166,17 +166,29 @@ làm `mock_rag.retrieve()` gọi `time.sleep(2.5)` trước khi trả về (`app
 5 câu hỏi challenge đều mang `feature=monitoring` nên triệu chứng lộ ra ở đó. Span `llm_generate`
 giữ nguyên 151 ms chứng minh LLM vô can.
 
-**Fix action:** tắt kịch bản để khôi phục dịch vụ —
-`python scripts/inject_incident.py --scenario rag_slow --disable`, xác nhận qua `/health`
-(`OBS-45`). Trong hệ thật, tương đương rollback thay đổi ở tầng retrieval hoặc chuyển sang
-vector store dự phòng.
+**Fix action:** tắt kịch bản để khôi phục dịch vụ — `python scripts/inject_incident.py --disable`.
+Đã thực hiện và xác nhận (`OBS-45`): `/health` trả
+`{"ok": true, "incidents": {"rag_slow": false, "tool_fail": false, "cost_spike": false}}`.
+Trong hệ thật, tương đương rollback thay đổi ở tầng retrieval hoặc chuyển sang vector store dự phòng.
 
-**Preventive measure:** đặt **timeout cho `retrieve()`** (ví dụ 500 ms) và trả tài liệu rỗng kèm
-log `error_type` khi quá hạn — chậm còn hơn treo, và sự cố sẽ hiện thành lỗi đếm được thay vì
-latency âm thầm. Kèm theo là alert theo **P95 vượt 2000 ms liên tục 5 phút** (có duration để
-không nổ vì một spike). Phát hiện thêm khi điều tra: `retrieve()` dùng `time.sleep` chặn trong
-handler `async` nên một tầng chậm sẽ kéo tụt toàn bộ throughput — nên chuyển sang I/O bất đồng bộ
-hoặc đẩy xuống threadpool.
+**Preventive measure — 3 việc, xếp theo mức độ cấp thiết:**
+
+1. **Hạ ngưỡng alert latency xuống 2000 ms.** Đây là lỗ hổng nghiêm trọng nhất phát hiện được:
+   `config/alert_rules.yaml` đang đặt *"P95 latency > 3000ms trong 5 phút liên tục"*, mà sự cố
+   này chỉ đẩy P95 lên **2652 ms** — **alert sẽ không nổ trong chính sự cố vừa điều tra**. Hệ
+   cảnh báo mù trước đúng kịch bản nó phải bắt. Ngưỡng nên bám `latency_threshold_ms = 2000`
+   của challenge, giữ nguyên duration 5 phút để không báo động giả theo từng spike.
+2. **Timeout cho `retrieve()`** (ví dụ 500 ms): quá hạn thì trả tài liệu rỗng kèm log
+   `error_type`. Chậm còn hơn treo, và sự cố hiện thành **lỗi đếm được** trên panel errors thay
+   vì latency âm thầm — dịch triệu chứng từ chỗ khó thấy sang chỗ dễ thấy.
+3. **Bỏ chặn event loop.** `retrieve()` dùng `time.sleep` đồng bộ trong handler `async`, nên một
+   tầng chậm kéo tụt toàn bộ throughput chứ không chỉ request của chính nó (client đo 13.280 ms
+   trong khi app ghi 2652 ms). Chuyển sang I/O bất đồng bộ hoặc đẩy xuống threadpool.
+
+Bài học rút ra: **cổng kiểm tra xanh không có nghĩa hệ thống ổn**. Dashboard vẫn xanh, alert vẫn
+im, `validate_logs.py` vẫn 100/100 — trong khi mọi request của feature bị ảnh hưởng chậm gấp 17
+lần. Thứ phát hiện ra sự cố là so sánh với **nhóm đối chiếu** và với **ngưỡng challenge**, không
+phải bản thân cái dashboard.
 
 > Lưu ý khi chạy challenge: đặt `LLM_PROVIDER=mock`. Với provider thật (`aibox`) latency đo được
 > là 5.000–17.600ms ngay cả khi chưa bật incident, vượt sẵn cả ngưỡng 2000ms lẫn threshold P95
