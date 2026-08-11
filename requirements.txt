@@ -4,6 +4,8 @@ pydantic==2.11.4
 structlog==25.4.0
 python-dotenv==1.1.0
 httpx==0.28.1
+anthropic==0.117.0
+openai==2.47.0
 langfuse==3.2.1
 PyYAML==6.0.3
 pytest==8.3.5

@@ -4,7 +4,7 @@ import time
 from dataclasses import dataclass
 
 from . import metrics
-from .mock_llm import FakeLLM
+from .llm import build_llm
 from .mock_rag import retrieve
 from .pii import hash_user_id, summarize_text
 from .prompt_management import resolve_prompt
@@ -22,9 +22,9 @@ class AgentResult:
 
 
 class LabAgent:
-    def __init__(self, model: str = "claude-sonnet-4-5") -> None:
-        self.model = model
-        self.llm = FakeLLM(model=model)
+    def __init__(self, model: str | None = None) -> None:
+        self.llm = build_llm(model=model)
+        self.model = self.llm.model
 
     @observe(as_type="generation", capture_input=False, capture_output=False)
     def run(self, user_id: str, feature: str, session_id: str, message: str) -> AgentResult:
