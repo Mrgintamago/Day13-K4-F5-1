@@ -298,7 +298,8 @@ Kết thúc: `python scripts/inject_incident.py --scenario rag_slow --disable`, 
 | `02b-log-pii-redacted.txt` | Log chứng minh PII đã thành `[REDACTED_*]` | `OBS-14` |
 | `03-prompt-versions.png` | Danh sách 2 prompt version | `OBS-21` |
 | `03b-trace-prompt-versions.png` | 2 trace hiện đúng name/label/version | `OBS-22` |
-| `04-prompt-rollback.png` | Trước/sau khi đổi label `production` | `OBS-23` |
+| `04-prompt-rollback-v1-production.png` | Rollback `production` → v1 | `OBS-23` |
+| `04-prompt-rollback-v2-production.png` | Promote `production` → v2 | `OBS-23` |
 | `04b-traces-list.png` | Danh sách ≥10 trace | `OBS-24` |
 | `04c-trace-waterfall.png` | 1 trace waterfall đầy đủ | `OBS-24` |
 | `05-validate-dashboard.txt` | `HỢP LỆ: 6/6 panel` | `OBS-31` |
