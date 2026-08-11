@@ -97,7 +97,7 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-43 | Chứng minh bằng Logs | SANG | 20m | High | 40, 10 | 44 | DONE |
 | **OBS-44** | Root cause + fix + preventive | QUANG | 20m | Blocker | 41, 42, 43 | 45, 52 | DONE |
 | OBS-45 | Tắt incident | QUANG | 5m | Medium | 44 | — | DONE |
-| OBS-50 | Gom evidence | TUONG | 20m | Blocker | 14, 23, 24, 33, 34 | 51 | WIP |
+| OBS-50 | Gom evidence | TUONG | 20m | Blocker | 14, 23, 24, 33, 34 | 51 | DONE |
 | OBS-51 | REPORT mục 1–5 | TUONG | 20m | Blocker | 50, 22 | 53, 54 | WIP |
 | **OBS-52** | REPORT mục 6 (challenge) | TUONG | 15m | Blocker | 44 | 54 | TODO |
 | OBS-53 | REPORT mục 7 (đóng góp) | TUONG | 10m | High | 51 | 54 | WIP |
@@ -155,9 +155,8 @@ Trạng thái còn lại:
 - `.venv` đã dựng bằng **Python 3.11.9**, `pip install -r requirements.txt` xanh, `pytest -q`
   báo **33 passed** trên 11 file test. `.env` đã có đủ các biến Langfuse bắt buộc (không commit),
   `data/logs.jsonl` đã được sinh.
-- Board hiện có **9 ticket `DONE`** (`OBS-01`, `OBS-02`, `OBS-03`, `OBS-10`…`OBS-14`, `OBS-24`),
-  **5 ticket `WIP`** (`OBS-31`, `OBS-42`, `OBS-50`, `OBS-51`, `OBS-53`) và **16 ticket `TODO`**;
-  chưa có ticket ở `REVIEW`.
+- Board hiện có **16 ticket `DONE`**, **2 ticket `WIP`** (`OBS-51`, `OBS-53`) và **1 ticket `TODO`**
+  (`OBS-41`); chưa có ticket ở `REVIEW`.
 - Không còn dòng `TODO` trong `app/`: PII processor đã được đăng ký đúng trước
   `JsonlFileProcessor` (`OBS-12`) và hai pattern passport/địa chỉ đã được bổ sung (`OBS-13`).
 - Kiểm tra cục bộ hiện tại: `validate_logs.py` đạt **100/100** (4/4 mục pass, 0 PII leak) và
@@ -169,13 +168,10 @@ Trạng thái còn lại:
 - Instrumentation đã có span con `rag_retrieve` và `llm_generate`; trace practice `rag_slow` đã
   khoanh vùng retrieval chiếm khoảng 69% latency. `OBS-42` ở `WIP` vì còn chờ trace/evidence từ
   lần chạy challenge chính thức (`OBS-40`).
-- Evidence hiện có 6 file (baseline, validator cuối, correlation ID, PII redaction, danh sách trace,
-  waterfall), nên `OBS-50`
-  đang `WIP`. REPORT mục 1–5 đã điền phần có dữ liệu thật nhưng còn nhiều placeholder (`OBS-51 WIP`);
+- Evidence trong `submission/evidence/` đã đủ **10/11** mục bắt buộc (`OBS-50 DONE`); còn thiếu 2
+  ảnh prompt versions (`03-prompt-versions.png`, `03b-trace-prompt-versions.png`) — item 4 tạm bỏ qua,
+  đã ghi rõ trong `docs/grading-evidence.md`. REPORT mục 1–5 còn placeholder (`OBS-51 WIP`);
   bảng đóng góp có 3/4 thành viên (`OBS-53 WIP`).
-- **12 dòng `TODO` trong `config/alert_rules.yaml`**: 3 rule × 4 field
-  (`name`, `severity`, `condition`, `owner`). `type: symptom-based` và `runbook:` đã điền sẵn —
-  giữ nguyên `type`, mỗi rule phải có mục tương ứng trong `docs/alerts.md#alert-1..3`.
 - `app/pii.py` hiện có **6 pattern** (`email`, `phone_vn`, `cccd`, `credit_card`, `passport`,
   `address_vn`). Hai pattern mới của `OBS-13` không làm tăng điểm `validate_logs.py` vì validator
   chỉ dò 4 loại ban đầu, nhưng hoàn thiện phạm vi PII theo DoD.
@@ -400,10 +396,15 @@ Không tự tạo hay sửa `config/challenge.json` trong bất kỳ trường h
 ## EPIC-5 — Report, Kiểm tra & Demo (3:30–4:00)
 
 ### OBS-50 · Gom evidence vào `submission/evidence/`
-- **Assignee:** TUONG · **Est:** 20m · **Priority:** Blocker
+- **Assignee:** TUONG · **Est:** 20m · **Priority:** Blocker · **Trạng thái:** DONE
 - **Blocked by:** `OBS-14`, `OBS-23`, `OBS-24`, `OBS-33`, `OBS-34`
 - **Blocks:** `OBS-51`
 - **DoD:** đủ 11 mục trong `docs/grading-evidence.md`, đặt tên theo `SPEC.md`.
+- **Ghi chú hoàn thành:** đã gom **10/11** mục bắt buộc. Item 4 (ảnh `03-prompt-versions.png`,
+  `03b-trace-prompt-versions.png`) **tạm bỏ qua** — đã có 2 trace ID và metadata trong REPORT mục 4,
+  thiếu 2 ảnh UI; ghi rõ trong `docs/grading-evidence.md`. Item 5 dùng 2 file
+  `04-prompt-rollback-v1/v2-production.png` (thay cho `04-prompt-rollback.png` duy nhất), đã đồng bộ
+  tên file vào `SPEC.md §9`.
 
 ### OBS-51 · Điền REPORT mục 1–5
 - **Assignee:** TUONG · **Est:** 20m · **Priority:** Blocker

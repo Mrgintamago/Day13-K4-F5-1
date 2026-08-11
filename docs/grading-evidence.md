@@ -10,14 +10,14 @@ dẫn lại bằng đường dẫn tương đối trong `submission/REPORT.md`.
 | 1 | Kết quả cuối của `validate_logs.py` | `01-validate-logs.txt` | OBS-14 | ✅ 100/100, 4/4 PASSED |
 | 2 | Danh sách có tối thiểu 10 traces | `04b-traces-list.png` | OBS-24 | ✅ ~144 bản ghi, 3 model |
 | 3 | Một trace waterfall đầy đủ | `04c-trace-waterfall.png` | OBS-24 | ✅ kèm panel metadata |
-| 4 | Hai prompt version và trace hiển thị đúng name/label/version | `03-prompt-versions.png`, `03b-trace-prompt-versions.png` | OBS-21, OBS-22 | ⏳ đã có 2 trace ID trong REPORT mục 4, **thiếu ảnh** |
-| 5 | Một bằng chứng đổi label hoặc rollback prompt | `04-prompt-rollback.png` | OBS-23 | ❌ chưa làm |
+| 4 | Hai prompt version và trace hiển thị đúng name/label/version | `03-prompt-versions.png`, `03b-trace-prompt-versions.png` | OBS-21, OBS-22 | ⏳ **THIẾU — tạm bỏ qua.** Đã có 2 trace ID trong REPORT mục 4, chưa có 2 ảnh UI |
+| 5 | Một bằng chứng đổi label hoặc rollback prompt | `04-prompt-rollback-v1-production.png`, `04-prompt-rollback-v2-production.png` | OBS-23 | ✅ promote `production`→v2 và rollback `production`→v1 |
 | 6 | Log JSON có correlation ID và metadata | `02-log-correlation-id.txt` | OBS-14 | ✅ |
 | 7 | Log chứng minh PII đã được redact | `02b-log-pii-redacted.txt` | OBS-14 | ✅ 6 loại PII, 0 leak |
-| 8 | Kết quả `validate_dashboard.py` hợp lệ | `05-validate-dashboard.txt` | OBS-31 | ⏳ lệnh báo `HỢP LỆ: 6/6 panel`, **chưa lưu file** |
-| 9 | Dashboard đủ 6 nhóm chỉ số | `06-dashboard.png` | OBS-30 | ❌ chưa làm — **đang chặn đường găng** |
-| 10 | Alert rules và runbook đã hoàn thiện | `config/alert_rules.yaml`, `docs/alerts.md` | OBS-33 | ❌ còn 12 dòng TODO |
-| 11 | Evidence điều tra challenge: metric, trace ID và log line | `08-challenge-metrics.png`, `09-challenge-trace.png`, `10-challenge-logs.txt` | OBS-41…43 | ❌ chờ OBS-40 |
+| 8 | Kết quả `validate_dashboard.py` hợp lệ | `05-validate-dashboard.txt` | OBS-31 | ✅ `HỢP LỆ: 6/6 panel có trong dashboard contract.` |
+| 9 | Dashboard đủ 6 nhóm chỉ số | `06-dashboard.png` | OBS-30 | ✅ kèm 06a/06b/06c |
+| 10 | Alert rules và runbook đã hoàn thiện | `config/alert_rules.yaml`, `docs/alerts.md` | OBS-33 | ✅ 3 rules + runbook đầy đủ |
+| 11 | Evidence điều tra challenge: metric, trace ID và log line | `08-challenge-metrics.png`, `09-challenge-trace.png`, `10-challenge-logs.txt` | OBS-41…43 | ✅ |
 
 Ngoài danh sách bắt buộc, đã có thêm `00-baseline-validate-logs.txt` (baseline 30/100) để đối
 chiếu trước/sau — chính là con số chứng minh phần Logging & PII có tác dụng thật.
