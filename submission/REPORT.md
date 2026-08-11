@@ -46,8 +46,9 @@ Chi tiết baseline → hiện tại:
   `[REDACTED_EMAIL]`, `[REDACTED_PHONE_VN]`, `[REDACTED_CCCD]`, `[REDACTED_CREDIT_CARD]`,
   `[REDACTED_PASSPORT]`, `[REDACTED_ADDRESS_VN]`, không còn chuỗi nguyên văn nào.
 - Evidence trace waterfall: `submission/evidence/04c-trace-waterfall.png` (một trace đầy đủ) và
-  `submission/evidence/04b-traces-list.png` (danh sách, lọc theo tag `deepseek-v4-pro`:
-  44 observation type GENERATION + 44 type SPAN).
+  `submission/evidence/04b-traces-list.png` (danh sách Tracing, không lọc — tổng ≈ 144 bản ghi
+  trên 3 model: `deepseek-v4-pro` 46, `claude-opus-5` 15, `claude-sonnet-4-5` 10; nhìn thấy cả
+  span `rag_retrieve` và `llm_generate` mới bổ sung).
 - Giải thích một span đáng chú ý: trace `b90d099f068854c7f281456af859d499` (session `s10`,
   user `105a9cef3903` — đã hash) có **2 observation**: một root SPAN `run` (0.15s) và một
   GENERATION `run` (0.15s) lồng bên trong, cost $0.002565, 211 token. Hai observation này
