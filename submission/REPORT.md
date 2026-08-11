@@ -74,14 +74,30 @@ Chi tiết baseline → hiện tại:
 ## 4. Prompt versioning
 
 - Prompt name: `day13-chat`
-- Version/label baseline: _(chờ OBS-20/OBS-21 xác nhận label `baseline`)_
-- Version/label candidate: _(chờ OBS-21)_
-- Trace ID của mỗi version: _(chờ OBS-22)_
-- Bằng chứng đổi label hoặc rollback: _(chờ OBS-23)_
+- Version/label baseline: **v1**, labels `baseline` + `production`
+- Version/label candidate: **v2**, label `candidate`
+- Trace ID của mỗi version — chạy **cùng một input** (`"So sanh hai prompt version"`,
+  feature `monitoring`) với hai label khác nhau:
 
-Đã xác nhận qua Langfuse API: trace hiện tại ghi `prompt_source: langfuse` (không phải
-`local` hay `local-fallback`), `prompt_name: day13-chat`, `prompt_label: production`,
-`prompt_version: 1` — tức là prompt managed đã được lấy đúng, không phải fallback cục bộ.
+| Label | Prompt version | Trace ID | `prompt_source` |
+|---|---:|---|---|
+| `baseline` | 1 | `0103043eb54840a173dff8d04241a4bf` | `langfuse` |
+| `candidate` | 2 | `3f27bd32300c6486594a98bab3f14590` | `langfuse` |
+
+- Bằng chứng đổi label hoặc rollback: _(chờ OBS-23 — cần ảnh trước/sau khi chuyển `production`
+  từ v1 sang v2 rồi rollback về v1, lưu `04-prompt-rollback.png`)_
+
+Cả hai trace đều ghi `prompt_source: langfuse` (không phải `local` hay `local-fallback`), nên
+version trong trace là version thật lấy từ Langfuse chứ không phải fallback cục bộ.
+
+**Sự cố đã gặp và cách xử lý (đáng ghi lại):** có một khoảng thời gian label `production` bị mất
+khỏi prompt trong khi `.env` vẫn trỏ `LANGFUSE_PROMPT_LABEL=production`. Hệ quả là mọi trace sinh
+ra trong khoảng đó ghi `prompt_source: local-fallback` và `prompt_version: local-v1` — tức app
+vẫn trả lời bình thường nhưng **không còn truy được prompt version thật**. Phát hiện bằng cách
+gọi Langfuse API kiểm từng label (`production` → `NotFound`) rồi bắn thử một request và đọc
+metadata trace. Khắc phục bằng cách gán lại label `production` cho v1 trên Langfuse — **không sửa
+code để ghi version giả** (RULES.md). Đây đúng là bài học của mục "fallback phải trung thực":
+một hệ observability nói dối về trạng thái của chính nó còn tệ hơn không có gì.
 
 ## 5. Dashboard, SLO và alerts
 
