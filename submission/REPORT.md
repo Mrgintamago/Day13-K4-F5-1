@@ -6,7 +6,9 @@
 
 - Tên nhóm: K4-F5-1
 - Repository URL: https://github.com/Mrgintamago/Day13-K4-F5-1
-- Commit SHA cuối: `137bec17bf59eb3278a76b5c016ab9cedd2a2e35` _(OBS-54 cập nhật SHA cuối cùng sau khi push)_
+- Commit SHA cuối (commit nội dung cuối cùng, đã qua cổng chất lượng `OBS-54`):
+  `2de4bb8593ee08a7859f5e1d1fbec09a2dc789a9` — sau commit này chỉ còn duy nhất commit ghi lại
+  chính SHA đó vào báo cáo.
 - Thành viên và vai trò:
 
 | Thành viên | MSSV | Vai trò |
