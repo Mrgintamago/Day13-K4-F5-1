@@ -101,7 +101,7 @@ Trạng thái: `TODO` · `WIP` · `REVIEW` · `DONE` — cập nhật trực ti�
 | OBS-51 | REPORT mục 1–5 | TUONG | 20m | Blocker | 50, 22 | 53, 54 | DONE |
 | **OBS-52** | REPORT mục 6 (challenge) | TUONG | 15m | Blocker | 44 | 54 | DONE |
 | OBS-53 | REPORT mục 7 (đóng góp) | TUONG | 10m | High | 51 | 54 | DONE |
-| **OBS-54** | Cổng chất lượng trước nộp | QUANG | 15m | Blocker | 51, 52, 53 | — | TODO |
+| **OBS-54** | Cổng chất lượng trước nộp | QUANG | 15m | Blocker | 51, 52, 53 | — | DONE |
 
 **In đậm = nằm trên đường găng.**
 
@@ -432,11 +432,21 @@ Không tự tạo hay sửa `config/challenge.json` trong bất kỳ trường h
   thật trước khi ghi.
 
 ### OBS-54 · Cổng chất lượng trước khi nộp
-- **Assignee:** QUANG · **Est:** 15m · **Priority:** Blocker
+- **Assignee:** QUANG · **Est:** 15m · **Priority:** Blocker · **Trạng thái:** DONE
 - **Blocked by:** `OBS-51`, `OBS-52`, `OBS-53`
 - **Blocks:** —
 - **Việc:** `python -m pytest -q` · `python scripts/validate_logs.py` · `python scripts/validate_dashboard.py` · `git status --short` · rà `.env`, key, PII, `.venv/`.
 - **DoD:** test xanh; `git status` sạch; không có secret/PII trong diff; push và lấy commit SHA cuối ghi vào REPORT mục 1.
+- **Kết quả cổng (chạy trên `.venv` Python 3.11.9):**
+  - `pytest -q` → **33 passed** (2 DeprecationWarning của FastAPI `on_event`, không phải lỗi).
+  - `scripts/validate_logs.py` → **100/100**: 32 record, 0 thiếu field, 0 thiếu enrichment,
+    16 correlation ID, **0 PII leak**.
+  - `scripts/validate_dashboard.py` → **HỢP LỆ 6/6 panel**.
+  - `git status --short` → rỗng; `git diff` của `config/challenge.json` rỗng (không bị sửa).
+  - Quét secret/PII trên file được track: không có `.env`, `.venv/`, API key thật.
+    `SETUP.md` chỉ chứa placeholder `pk-lf-...`/`sk-lf-...`; số điện thoại trong
+    `data/sample_queries.jsonl` và `tests/test_pii.py` là dữ liệu mẫu của đề dùng để
+    kiểm thử redaction, không phải PII thật — evidence đã redact sạch.
 
 > **OBS-55 (kịch bản demo) đã bỏ khỏi board.** Phần vấn đáp vẫn được chấm (rubric B1, 20 điểm)
 > nhưng không quản lý như một ticket — mỗi người tự đọc [THEORY.md](THEORY.md) và
